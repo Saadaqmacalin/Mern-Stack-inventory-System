@@ -17,9 +17,10 @@ function Sidebar({ user }) {
       <h2 className="text-xl font-bold mb-6 text-indigo-400">
         Admin Dashboard
       </h2>
+  <hr className="text-gray-500" />
 
       {/* Navigation links */}
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-2 mt-6">
         <NavLink
           to="/"
           className={({ isActive }) =>

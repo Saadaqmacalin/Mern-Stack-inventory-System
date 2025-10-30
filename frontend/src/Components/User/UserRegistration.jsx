@@ -1,18 +1,16 @@
-import React, { useEffect, useState  } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
-
 
 const API_URL = "http://localhost:5000/api/users";
 
 const UserRegistration = () => {
   const location = useLocation();
-  const user = location.state?.user; // ✅ get user passed from GetUsers
+  const user = location.state?.user; //  get user passed from GetUsers
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -53,7 +51,7 @@ const UserRegistration = () => {
       }
 
       setLoading(false);
-      navigate("/")
+      navigate("/");
     } catch (err) {
       alert("Error: " + err.message);
       setLoading(false);
@@ -67,7 +65,10 @@ const UserRegistration = () => {
         <h2 className="text-xl font-bold text-blue-600">
           {user ? "Edit User" : "User Registration"}
         </h2>
-        <button className="flex gap-1 items-center font-semibold text-sm text-red-600 px-2 py-2 rounded-lg shadow">
+        <button
+          className="flex gap-1 items-center font-semibold text-sm text-red-600 px-2 py-2 rounded-lg shadow"
+           onClick={()=>navigate("/Users")}
+        >
           <FaTimes className="text-base" />
           <span>Close</span>
         </button>
@@ -141,14 +142,8 @@ const UserRegistration = () => {
         <button
           disabled={loading}
           className="text-center text-xl py-2 w-full bg-blue-500 hover:bg-indigo-400 rounded-2xl text-white"
-          
         >
-          {loading
-            ? "Processing..."
-            : user
-            ? "Update User"
-            : "Register User"} 
-            
+          {loading ? "Processing..." : user ? "Update User" : "Register User"}
         </button>
       </form>
     </div>
