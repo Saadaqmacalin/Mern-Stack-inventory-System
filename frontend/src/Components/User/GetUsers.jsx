@@ -47,7 +47,9 @@ const GetUsers = () => {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">User Management</h1>
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+        User Management
+      </h1>
 
       <input
         type="text"
@@ -75,13 +77,21 @@ const GetUsers = () => {
           <tbody className="text-gray-700">
             {filteredData.length ? (
               filteredData.map((u) => (
-                <tr key={u._id} className="border-b hover:bg-gray-50 transition-colors">
+                <tr
+                  key={u._id}
+                  className="border-b hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-6 py-3 text-sm">{u.name}</td>
                   <td className="px-6 py-3 text-sm">{u.email}</td>
-                  <td className="px-6 py-3 text-sm font-medium text-indigo-600">{u.Status}</td>
+                  <td className="px-6 py-3 text-sm font-medium text-indigo-600">
+                    {u.Status}
+                  </td>
                   <td className="px-6 py-3 flex gap-2">
                     <button
-                      onClick={() => handleEdit(u)}
+                      onClick={() => {
+                        handleEdit(u);
+                        // navigate("/userRegistration");
+                      }}
                       className="bg-gradient from-blue-400 to-blue-600 text-red-400 px-3 py-1 rounded-lg text-sm font-medium shadow-md hover:from-blue-500 hover:to-blue-700 transition"
                     >
                       Edit

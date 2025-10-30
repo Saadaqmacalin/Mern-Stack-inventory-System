@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+
 
 
 const API_URL = "http://localhost:5000/api/users";
@@ -10,6 +12,7 @@ const UserRegistration = () => {
   const location = useLocation();
   const user = location.state?.user; // ✅ get user passed from GetUsers
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -50,6 +53,7 @@ const UserRegistration = () => {
       }
 
       setLoading(false);
+      navigate("/")
     } catch (err) {
       alert("Error: " + err.message);
       setLoading(false);
@@ -137,12 +141,14 @@ const UserRegistration = () => {
         <button
           disabled={loading}
           className="text-center text-xl py-2 w-full bg-blue-500 hover:bg-indigo-400 rounded-2xl text-white"
+          
         >
           {loading
             ? "Processing..."
             : user
             ? "Update User"
-            : "Register User"}
+            : "Register User"} 
+            
         </button>
       </form>
     </div>

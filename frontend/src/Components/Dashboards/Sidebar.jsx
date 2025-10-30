@@ -1,91 +1,145 @@
-// Sidebar.jsx
-import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  FaUsers,
+  FaHome,
+  FaBox,
+  FaShoppingCart,
+  FaChartBar,
+  FaUser,
+  FaQuestionCircle,
+} from "react-icons/fa"; // Font Awesome Users icon
 
-// Single sidebar link component
-const SidebarLink = ({ name, path, icon }) => {
+function Sidebar({ user }) {
+  // receive user as prop
   return (
-    <NavLink
-      to={path}
-      className={({ isActive }) =>
-        `flex items-center p-3 rounded-lg mb-1 transition-colors duration-150 
-        ${isActive
-          ? 'bg-indigo-600 font-semibold text-white shadow-md'
-          : 'hover:bg-gray-700 text-gray-300'}`
-      }
-      end={path === '/'} // root path exact match
-    >
-      <span className="mr-3 text-lg">{icon}</span>
-      <span className="text-sm">{name}</span>
-    </NavLink>
-  );
-};
-
-// Navigation items (main links)
-const navItems = [
-  { name: 'Dashboard', path: '/', icon: '🏠' },
-  { name: 'Users', path: '/users', icon: '👥' },
-  { name: 'Products', path: '/products', icon: '📦' },
-];
-
-// Grouped navigation items
-const navGroups = [
-  {
-    title: 'Management',
-    items: [
-      { name: 'Orders', path: '/orders', icon: '🛒' },
-      { name: 'Reports', path: '/reports', icon: '📊' },
-    ],
-  },
-  {
-    title: 'Settings',
-    items: [
-      { name: 'Profile', path: '/profile', icon: '👤' },
-      { name: 'Preferences', path: '/preferences', icon: '⚙️' },
-    ],
-  },
-];
-
-const Sidebar = () => {
-  const location = useLocation();
-  const currentPath = location.pathname;
-
-  return (
-    <aside className="w-64 min-h-screen bg-gray-800 text-white flex flex-col p-4 shadow-2xl sticky top-0">
-      {/* Branding / Logo */}
-      <div className="text-2xl font-extrabold mb-8 text-indigo-400 border-b border-gray-700 pb-4">
+    <div className="w-60 min-h-screen bg-gray-800 text-white p-4">
+      <h2 className="text-xl font-bold mb-6 text-indigo-400">
         Admin Dashboard
-      </div>
+      </h2>
 
-      {/* Navigation */}
-      <nav className="flex flex-col">
-        {/* Main Links */}
-        {navItems.map((item) => (
-          <SidebarLink key={item.name} {...item} />
-        ))}
-
-        {/* Grouped Links */}
-        {navGroups.map((group, index) => (
-          <div key={index} className="mt-4">
-            {/* Group Title */}
-            <p className="text-xs uppercase text-gray-400 font-semibold tracking-wider mb-2 border-t border-gray-700 pt-3">
-              {group.title}
-            </p>
-
-            {/* Group Items */}
-            {group.items.map((item) => (
-              <SidebarLink key={item.name} {...item} />
-            ))}
+      {/* Navigation links */}
+      <nav className="flex flex-col gap-2">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaHome size={20} className="text-gray-400" />
+            <span>Dashboard</span>
           </div>
-        ))}
-      </nav>
+        </NavLink>
 
-      {/* Sidebar Footer */}
-      <div className="mt-auto border-t border-gray-700 pt-4">
-        <p className="text-sm text-gray-400">Logged in as Admin</p>
-      </div>
-    </aside>
+        <NavLink
+          to="/users"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex items-center gap-2">
+            <FaUsers size={20} className="text-gray-400" />
+            <h6>Users</h6>
+          </div>
+        </NavLink>
+
+        <NavLink
+          to="/products"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaBox size={20} className="text-gray-400 " />
+            <span>Products</span>
+          </div>
+        </NavLink>
+
+        <hr className="text-gray-500" />
+        <h6 className="text-gray-400 font-extralight">MANAGEMENT</h6>
+
+        <NavLink
+          to="/orders"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaShoppingCart size={20} className="text-gray-400 " />
+            <span>Orders</span>
+          </div>
+        </NavLink>
+
+        <NavLink
+          to="/reports"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaChartBar size={20} className="text-gray-400 " />
+            <span>Report</span>
+          </div>
+        </NavLink>
+
+        <hr className="text-gray-500" />
+        <h6 className="text-gray-400 font-extralight">SETTINGS</h6>
+
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaUser size={20} className="text-gray-400 " />
+            <span>Profile</span>
+          </div>
+        </NavLink>
+
+        <NavLink
+          to="/help"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-indigo-600 p-2 rounded text-white"
+              : "hover:bg-gray-700 p-2 rounded"
+          }
+        >
+          <div className="flex space-x-2">
+            <FaQuestionCircle size={20} className="text-gray-400 " />
+            <span>Help</span>
+          </div>
+        </NavLink>
+
+
+        <div className="mt-40 text-xl">
+          {/* Conditional rendering */}
+          {user ? (
+            user.Status === "ADMIN" ? (
+              <h4>Logged as Admin</h4>
+            ) : (
+              <h4>Logged as User</h4>
+            )
+          ) : (
+            <h4 className="text-gray-400 font-medium">logged as Admin  </h4>
+          )}
+        </div>
+      </nav>
+    </div>
   );
-};
+}
 
 export default Sidebar;
