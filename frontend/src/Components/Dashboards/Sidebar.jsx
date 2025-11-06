@@ -14,10 +14,11 @@ function Sidebar({ user }) {
   // receive user as prop
   return (
     <div className="w-60 min-h-screen bg-gray-800 text-white p-4">
+      
       <h2 className="text-xl font-bold mb-6 text-indigo-400">
         Admin Dashboard
       </h2>
-  <hr className="text-gray-500" />
+      <hr className="text-gray-500" />
 
       {/* Navigation links */}
       <nav className="flex flex-col gap-2 mt-6">
@@ -125,7 +126,6 @@ function Sidebar({ user }) {
           </div>
         </NavLink>
 
-
         <div className="mt-40 text-xl">
           {/* Conditional rendering */}
           {user ? (
@@ -135,7 +135,7 @@ function Sidebar({ user }) {
               <h4>Logged as User</h4>
             )
           ) : (
-            <h4 className="text-gray-400 font-medium">logged as Admin  </h4>
+            <h4 className="text-gray-400 font-medium">logged as Admin </h4>
           )}
         </div>
       </nav>

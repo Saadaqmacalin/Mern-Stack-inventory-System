@@ -37,6 +37,7 @@ const UserRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setLoading(true);
 
@@ -45,15 +46,37 @@ const UserRegistration = () => {
         await axios.patch(`${API_URL}/${user._id}`, formData);
         alert("User updated successfully!");
       } else {
+        // ✅ Check if user already exists before creating
+        const checkRes = await axios.get(`${API_URL}?email=${formData.email}`);
+        if (Array.isArray(checkRes.data) && checkRes.data.length > 0) {
+          alert("⚠️ User already exists! Please use another email.");
+          setLoading(false);
+          return;
+        }
+
         // ✅ Create new user
         await axios.post(API_URL, formData);
-        alert("User registered successfully!");
+        alert("✅ User registered successfully!");
       }
 
       setLoading(false);
       navigate("/");
     } catch (err) {
-      alert("Error: " + err.message);
+      console.error("Error during registration:", err);
+
+      // ✅ Handle specific backend errors
+      if (err.response) {
+        if (err.response.status === 409) {
+          alert("⚠️ User already exists!");
+        } else if (err.response.data?.message?.toLowerCase().includes("exists")) {
+          alert("⚠️ User already exists!");
+        } else {
+          alert("❌ Error: " + (err.response.data?.message || "Something went wrong."));
+        }
+      } else {
+        alert("❌ Error: " + err.message);
+      }
+
       setLoading(false);
     }
   };
@@ -67,7 +90,7 @@ const UserRegistration = () => {
         </h2>
         <button
           className="flex gap-1 items-center font-semibold text-sm text-red-600 px-2 py-2 rounded-lg shadow"
-           onClick={()=>navigate("/Users")}
+          onClick={() => navigate("/Users")}
         >
           <FaTimes className="text-base" />
           <span>Close</span>
@@ -131,7 +154,7 @@ const UserRegistration = () => {
             name="Status"
             id="Status"
             value={formData.Status}
-            onChange={handleChange} // ✅ fixed
+            onChange={handleChange}
             className="text-sm font-extralight w-full px-4 py-2 border border-gray-300 rounded-md"
           >
             <option value="USER">USER</option>
@@ -141,10 +164,16 @@ const UserRegistration = () => {
 
         <button
           disabled={loading}
-          className="text-center text-xl py-2 w-full bg-blue-500 hover:bg-indigo-400 rounded-2xl text-white"
+          className={`text-center text-xl py-2 w-full rounded-2xl text-white ${
+            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-400"
+          }`}
         >
           {loading ? "Processing..." : user ? "Update User" : "Register User"}
         </button>
+
+        <h4 className="text-blue600 font-extralight mt-3 ml-18">
+          Already have an account? <Link to="/login" className="text-blue-600 underline">Login</Link>
+        </h4>
       </form>
     </div>
   );

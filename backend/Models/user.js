@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema({
     required: [true, "password must be provided"],
   },
   Status: {
-    type: String, 
-    enum: ["ADMIN", "USER"], 
-    default: "USER", 
+    type: String,
+    enum: ["ADMIN", "USER"],
+    default: "USER",
   },
 });
 

@@ -4,10 +4,12 @@ import UserRegistration from "./Components/User/UserRegistration";
 import "./index.css";
 import MainLayout from "./Components/MainLayout";
 import Dashboard from "./Components/Dashboards/Dashboard";
+import Login from "./Components/User/Login";
 
 function App() {
   return (
     <Routes>
+      <Route path="/login" element={<Login/>}/>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/Users" element={<GetUsers />} />
