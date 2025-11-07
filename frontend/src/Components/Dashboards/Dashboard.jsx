@@ -1,22 +1,23 @@
 import React from "react";
+import { FaHome } from "react-icons/fa";
 
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-
       {/* Page Title */}
-      <h2 className="text-3xl font-bold text-gray-800 mb-10 border-b-4 border-indigo-500 inline-block pb-2">
-        🚀 Dashboard Overview
+      <h2 className="text-3xl font-bold text-gray-800 mb-10 border-b-4 border-indigo-500 pb-4 flex items-center gap-3">
+        <FaHome size={30} className="text-indigo-500" />
+        <span>Dashboard Overview</span>
       </h2>
 
       {/* Dashboard Cards */}
       <div className="flex flex-wrap gap-8 justify-center lg:justify-start">
-
         {/* Total Users */}
         <div className="flex flex-col items-center">
           <button className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-full font-medium shadow-md">
             Add User
           </button>
+
           <div className="mt-4 bg-white h-44 w-44 sm:h-48 sm:w-48 p-6 rounded-2xl shadow-lg border-b-8 border-indigo-500 text-center">
             <h3 className="text-gray-500 text-lg mb-3">Total Users</h3>
             <p className="text-4xl font-bold text-indigo-600">234</p>
@@ -56,15 +57,28 @@ const Dashboard = () => {
           </div>
         </div>
 
+        <div className="flex flex-col items-center">
+          <button className="bg-amber-500 hover:bg-amber-400 text-white rounded-full px-4 py-2 font-medium shadow-md">
+            Custom Action
+          </button>
+          <div className="mt-4 bg-white h-44 w-44 sm:h-48 sm:w-48 p-6 rounded-2xl shadow-lg border-b-8 border-amber-500 text-center">
+            <h3 className="text-gray-900 text-lg mb-3">Custom Metric</h3>
+            <p className="text-4xl font-bold text-amber-600">42</p>
+          </div>
+        </div>
       </div>
 
       {/* Quick Stats Section */}
       <div className="mt-12 bg-white p-6 rounded-xl shadow-md">
-        <h3 className="text-xl font-semibold text-gray-700 mb-4">Quick Stats</h3>
+        <h3 className="text-xl font-semibold text-gray-700 mb-4">
+          Quick Stats
+        </h3>
 
         <ul className="space-y-4">
           <li className="flex justify-between p-3 bg-gray-50 rounded-lg border-l-4 border-indigo-500">
-            <span className="font-medium text-gray-600">New Signups Today:</span>
+            <span className="font-medium text-gray-600">
+              New Signups Today:
+            </span>
             <span className="font-bold text-indigo-700">12</span>
           </li>
           <li className="flex justify-between p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
@@ -73,7 +87,6 @@ const Dashboard = () => {
           </li>
         </ul>
       </div>
-
     </div>
   );
 };
