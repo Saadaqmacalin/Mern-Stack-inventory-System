@@ -115,34 +115,49 @@ const deleteUser = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "email and password are needed" });
     }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Unauthonticated error invalid email or password" });
+        .json({ message: "Invalid email or password" });
     }
+
     const isPasswordCorrect = user.comparePassword(password);
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "password is inCorrect" });
+        .json({ message: "Password is incorrect" });
     }
+
     const token = await user.createJWT();
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "login successfuly", user: { name: user.name }, token });
+
+    // ✔ INCLUDE STATUS (IMPORTANT!!)
+    res.status(StatusCodes.OK).json({
+      message: "Login successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+        status: user.Status,   // <-- FIXED
+        id: user._id
+      },
+      token,
+    });
+
   } catch (error) {
-    console.error("Error ocured while loging ", error);
+    console.error("Error occured while logging in:", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Something went wrong wile user trying to male login" });
+      .json({ message: "Something went wrong while trying to log in" });
   }
 };
+
 
 module.exports = {
   registerUser,

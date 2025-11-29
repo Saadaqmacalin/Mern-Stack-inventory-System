@@ -29,7 +29,7 @@ const GetUsers = () => {
       field.toLowerCase().includes(search.toLowerCase())
     )
   );
-
+ 
   const handleEdit = (user) => {
     navigate("/userRegistration", { state: { user } });
   };
@@ -41,13 +41,13 @@ const GetUsers = () => {
       alert("User deleted");
       await getUsers();
     } catch (error) {
-      alert("Failed to delete the user");
+      alert("Failed to delete the user", error.message);
     }
   };
 
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">
         User Management
       </h1>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import {
   FaUsers,
   FaHome,
@@ -8,19 +8,24 @@ import {
   FaChartBar,
   FaUser,
   FaQuestionCircle,
-} from "react-icons/fa"; // Font Awesome Users icon
+} from "react-icons/fa";
 
-function Sidebar({ user }) {
-  // receive user as prop
+function Sidebar() {
+  const navigate = useNavigate();
+  const logeduser = JSON.parse(localStorage.getItem("user"));
+
+  const clearLocalStorage = () => {
+    localStorage.clear();
+    navigate("/"); // redirect to login/home
+  };
+
   return (
     <div className="w-60 min-h-screen bg-gray-800 text-white p-4">
-      
       <h2 className="text-xl font-bold mb-6 text-indigo-400">
         Admin Dashboard
       </h2>
       <hr className="text-gray-500" />
 
-      {/* Navigation links */}
       <nav className="flex flex-col gap-2 mt-6">
         <NavLink
           to="/"
@@ -126,17 +131,24 @@ function Sidebar({ user }) {
           </div>
         </NavLink>
 
-        <div className="mt-40 text-xl">
-          {/* Conditional rendering */}
-          {user ? (
-            user.Status === "ADMIN" ? (
-              <h4>Logged as Admin</h4>
+        <div className="mt-70 text-l">
+          {logeduser ? (
+            logeduser.status === "ADMIN" ? (
+              <h4>{logeduser.name} Logged as Admin</h4>
             ) : (
-              <h4>Logged as User</h4>
+              <h4>{logeduser.name} Logged as User</h4>
             )
           ) : (
-            <h4 className="text-gray-400 font-medium">logged as Admin </h4>
+            <h4 className="text-gray-400 font-medium">No user logged in</h4>
           )}
+
+          <button
+            onClick={clearLocalStorage}
+            
+            className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+          >
+            Logout
+          </button>
         </div>
       </nav>
     </div>

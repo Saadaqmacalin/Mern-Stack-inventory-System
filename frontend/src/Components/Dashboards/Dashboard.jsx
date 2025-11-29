@@ -18,7 +18,7 @@ const Dashboard = () => {
             Add User
           </button>
 
-          <div className="mt-4 bg-white h-44 w-44 sm:h-48 sm:w-48 p-6 rounded-2xl shadow-lg border-b-8 border-indigo-500 text-center">
+          <div className="mt-2 bg-white h-44 w-44 sm:h-48 sm:w-48 p-6 rounded-2xl shadow-lg border-b-8 border-indigo-500 text-center">
             <h3 className="text-gray-500 text-lg mb-3">Total Users</h3>
             <p className="text-4xl font-bold text-indigo-600">234</p>
           </div>
@@ -69,7 +69,7 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Stats Section */}
-      <div className="mt-12 bg-white p-6 rounded-xl shadow-md">
+      <div className="mt-60 bg-white p-6 rounded-xl shadow-md">
         <h3 className="text-xl font-semibold text-gray-700 mb-4">
           Quick Stats
         </h3>

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/api/users";
 
 const UserRegistration = () => {
   const location = useLocation();
-  const user = location.state?.user; //  get user passed from GetUsers
+  const user = location.state?.user; // Editing user passed from GetUsers
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ const UserRegistration = () => {
     Status: "USER",
   });
 
-  // ✅ If editing, pre-fill the form
+  // Pre-fill for editing
   useEffect(() => {
     if (user) {
       setFormData({
@@ -42,11 +42,11 @@ const UserRegistration = () => {
       setLoading(true);
 
       if (user) {
-        // ✅ Update existing user
+        // Update existing user
         await axios.patch(`${API_URL}/${user._id}`, formData);
         alert("User updated successfully!");
       } else {
-        // ✅ Check if user already exists before creating
+        // Check if user exists
         const checkRes = await axios.get(`${API_URL}?email=${formData.email}`);
         if (Array.isArray(checkRes.data) && checkRes.data.length > 0) {
           alert("⚠️ User already exists! Please use another email.");
@@ -54,27 +54,23 @@ const UserRegistration = () => {
           return;
         }
 
-        // ✅ Create new user
+        // Register new user
         await axios.post(API_URL, formData);
         alert("✅ User registered successfully!");
       }
 
       setLoading(false);
-      navigate("/");
-    } catch (err) {
-      console.error("Error during registration:", err);
 
-      // ✅ Handle specific backend errors
+      // ✔ Redirect to home page
+      navigate("/Dashboard");
+
+    } catch (err) {
+      console.error("Error:", err);
+
       if (err.response) {
-        if (err.response.status === 409) {
-          alert("⚠️ User already exists!");
-        } else if (err.response.data?.message?.toLowerCase().includes("exists")) {
-          alert("⚠️ User already exists!");
-        } else {
-          alert("❌ Error: " + (err.response.data?.message || "Something went wrong."));
-        }
+        alert("❌ " + (err.response.data?.message || "Something went wrong."));
       } else {
-        alert("❌ Error: " + err.message);
+        alert("❌ " + err.message);
       }
 
       setLoading(false);
@@ -102,57 +98,48 @@ const UserRegistration = () => {
       {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4 mt-4">
-          <label htmlFor="name" className="font-medium text-gray-700">
-            Name:
-          </label>
+          <label htmlFor="name" className="font-medium text-gray-700">Name:</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Enter your Name"
             required
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            placeholder="Enter your Name"
+            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="font-medium text-gray-700">
-            Email:
-          </label>
+          <label htmlFor="email" className="font-medium text-gray-700">Email:</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
             required
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            placeholder="Enter your email"
+            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="password" className="font-medium text-gray-700">
-            Password:
-          </label>
+          <label htmlFor="password" className="font-medium text-gray-700">Password:</label>
           <input
             type="text"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your Password"
             required
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            placeholder="Enter your Password"
+            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div className="mb-4">
-          <label htmlFor="Status" className="font-medium text-gray-700">
-            Role:
-          </label>
+          <label htmlFor="Status" className="font-medium text-gray-700">Role:</label>
           <select
             name="Status"
-            id="Status"
             value={formData.Status}
             onChange={handleChange}
             className="text-sm font-extralight w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -162,7 +149,9 @@ const UserRegistration = () => {
           </select>
         </div>
 
+        {/* FIXED BUTTON — No onClick, submits normally */}
         <button
+          type="submit"
           disabled={loading}
           className={`text-center text-xl py-2 w-full rounded-2xl text-white ${
             loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-400"
@@ -172,7 +161,8 @@ const UserRegistration = () => {
         </button>
 
         <h4 className="text-blue600 font-extralight mt-3 ml-18">
-          Already have an account? <Link to="/login" className="text-blue-600 underline">Login</Link>
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 underline">Login</Link>
         </h4>
       </form>
     </div>
