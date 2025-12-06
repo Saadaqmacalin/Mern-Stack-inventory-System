@@ -6,6 +6,7 @@ import axios from "axios";
 const API_URL = "http://localhost:5000/api/users";
 
 const UserRegistration = () => {
+  
   const location = useLocation();
   const user = location.state?.user; // Editing user passed from GetUsers
 
@@ -45,6 +46,7 @@ const UserRegistration = () => {
         // Update existing user
         await axios.patch(`${API_URL}/${user._id}`, formData);
         alert("User updated successfully!");
+        
       } else {
         // Check if user exists
         const checkRes = await axios.get(`${API_URL}?email=${formData.email}`);
@@ -57,20 +59,20 @@ const UserRegistration = () => {
         // Register new user
         await axios.post(API_URL, formData);
         alert("✅ User registered successfully!");
+        
       }
 
       setLoading(false);
 
       // ✔ Redirect to home page
       navigate("/Dashboard");
-
     } catch (err) {
       console.error("Error:", err);
 
       if (err.response) {
-        alert("❌ " + (err.response.data?.message || "Something went wrong."));
+        alert("❌" + (err.response.data?.message || "Something went wrong."));
       } else {
-        alert("❌ " + err.message);
+        alert("❌" + err.message);
       }
 
       setLoading(false);
@@ -98,7 +100,9 @@ const UserRegistration = () => {
       {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4 mt-4">
-          <label htmlFor="name" className="font-medium text-gray-700">Name:</label>
+          <label htmlFor="name" className="font-medium text-gray-700">
+            Name:
+          </label>
           <input
             type="text"
             name="name"
@@ -111,7 +115,9 @@ const UserRegistration = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="font-medium text-gray-700">Email:</label>
+          <label htmlFor="email" className="font-medium text-gray-700">
+            Email:
+          </label>
           <input
             type="email"
             name="email"
@@ -124,7 +130,9 @@ const UserRegistration = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="password" className="font-medium text-gray-700">Password:</label>
+          <label htmlFor="password" className="font-medium text-gray-700">
+            Password:
+          </label>
           <input
             type="text"
             name="password"
@@ -137,7 +145,9 @@ const UserRegistration = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="Status" className="font-medium text-gray-700">Role:</label>
+          <label htmlFor="Status" className="font-medium text-gray-700">
+            Role:
+          </label>
           <select
             name="Status"
             value={formData.Status}
@@ -162,7 +172,9 @@ const UserRegistration = () => {
 
         <h4 className="text-blue600 font-extralight mt-3 ml-18">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 underline">Login</Link>
+          <Link to="/login" className="text-blue-600 underline">
+            Login
+          </Link>
         </h4>
       </form>
     </div>
