@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useUserContext } from "../User/userContext.jsx"; 
 import { FaHome, FaUserPlus, FaMoneyBillWave, FaListAlt ,FaBox} from "react-icons/fa"; // Added more specific icons
 import { useNavigate } from "react-router-dom"; 
@@ -29,8 +28,8 @@ const Dashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 ml-60">
-      <h2 className="text-3xl font-bold text-gray-800 mb-10 border-b-4
+    <div className="min-h-screen bg-gray-200 p-6 ml-60">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b-4
        border-indigo-500 pb-6 flex items-center gap-3">
         <FaHome size={30} className="text-indigo-500" />
         <span>Dashboard Overview</span>
@@ -53,7 +52,7 @@ const Dashboard = () => {
         <StatCard 
           title="Products" 
           value="18" 
-          color="amber" 
+          color="red" 
           icon={FaBox} 
           actionText="view Products"
           onAction={() => console.log('Navigate to New Project')}
@@ -63,7 +62,7 @@ const Dashboard = () => {
         <StatCard 
           title="Revenue (USD)" 
           value="$12.5K" 
-          color="red" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
+          color="indigo" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
           icon={FaMoneyBillWave} 
           actionText="View Report"
           onAction={() => navigate('/reports')}

@@ -17,12 +17,10 @@ const GetUsers = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure to delete this user?")) return;
+    
     try {
       await axios.delete(`${API_URL}/${id}`);
-      // either re-fetch the whole list
       await refreshUsers();
-      // or update local context optimistically:
-      // setUsers(prev => prev.filter(u => u._id !== id));
       alert("User deleted");
     } catch (err) {
       alert("Failed to delete the user: " + err.message);

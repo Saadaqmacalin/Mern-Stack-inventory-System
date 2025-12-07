@@ -27,13 +27,11 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  // fetch on mount
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
-  // expose refreshUsers so any component can re-fetch after changes
-  const refreshUsers = async () => {
+  const refreshUsers = async () => { // refresh 
     await fetchUsers();
   };
 

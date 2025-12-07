@@ -206,6 +206,7 @@ function Sidebar() {
             <span>Help</span>
           </div>
         </NavLink>
+        
       </nav>
 
       {/* User Info and Logout */}
