@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const authenticationHeader = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    throw new Error("Authontication invalid");
+     throw new Error("Authontication invalid");
   }
   const token = authHeader.split(" ")[1];
 

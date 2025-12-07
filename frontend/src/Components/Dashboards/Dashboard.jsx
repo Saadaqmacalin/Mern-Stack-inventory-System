@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useUserContext } from "../User/userContext.jsx"; 
-import { FaHome, FaUserPlus, FaLayerGroup, FaMoneyBillWave, FaListAlt ,FaBox} from "react-icons/fa"; // Added more specific icons
+import { FaHome, FaUserPlus, FaMoneyBillWave, FaListAlt ,FaBox} from "react-icons/fa"; // Added more specific icons
 import { useNavigate } from "react-router-dom"; 
 
 const Dashboard = () => {
@@ -31,7 +31,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-6 ml-60">
       <h2 className="text-3xl font-bold text-gray-800 mb-10 border-b-4
-       border-indigo-500 pb-4 flex items-center gap-3">
+       border-indigo-500 pb-6 flex items-center gap-3">
         <FaHome size={30} className="text-indigo-500" />
         <span>Dashboard Overview</span>
       </h2>
@@ -53,7 +53,7 @@ const Dashboard = () => {
         <StatCard 
           title="Products" 
           value="18" 
-          color="red" 
+          color="amber" 
           icon={FaBox} 
           actionText="view Products"
           onAction={() => console.log('Navigate to New Project')}
@@ -63,7 +63,7 @@ const Dashboard = () => {
         <StatCard 
           title="Revenue (USD)" 
           value="$12.5K" 
-          color="green" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
+          color="red" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
           icon={FaMoneyBillWave} 
           actionText="View Report"
           onAction={() => navigate('/reports')}
@@ -82,23 +82,23 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Stats Section */}
-      {/* FIX: Removed 'mt-60' which caused excessive spacing, replaced with standard 'mt-10' */}
       <div className="mt-60 bg-white p-6 rounded-xl shadow-md">
         <h3 className="text-xl font-semibold text-gray-700 mb-4">
           Quick Stats
         </h3>
 
         <ul className="space-y-4">
+
           <li className="flex justify-between p-3 bg-gray-50 rounded-lg border-l-4 border-indigo-500">
-            <span className="font-medium text-gray-600">
-              New Signups Today:
-            </span>
+            <span className="font-medium text-gray-600"> New Signups Today:</span>
             <span className="font-bold text-indigo-700">12</span>
           </li>
+
           <li className="flex justify-between p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
             <span className="font-medium text-gray-600">Server Status:</span>
             <span className="font-bold text-green-700">Operational</span>
           </li>
+
         </ul>
       </div>
     </div>

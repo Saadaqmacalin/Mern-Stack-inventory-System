@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
+import { useUserContext } from "./userContext";
 
 const API_URL = "http://localhost:5000/api/users";
 
 const UserRegistration = () => {
-  
+  const {refreshUsers} = useUserContext()
   const location = useLocation();
   const user = location.state?.user; // Editing user passed from GetUsers
 
@@ -46,7 +47,7 @@ const UserRegistration = () => {
         // Update existing user
         await axios.patch(`${API_URL}/${user._id}`, formData);
         alert("User updated successfully!");
-        
+        // await refreshUsers();
       } else {
         // Check if user exists
         const checkRes = await axios.get(`${API_URL}?email=${formData.email}`);
@@ -59,7 +60,7 @@ const UserRegistration = () => {
         // Register new user
         await axios.post(API_URL, formData);
         alert("✅ User registered successfully!");
-        
+        await refreshUsers();
       }
 
       setLoading(false);
