@@ -1,18 +1,47 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import axios from "axios";
+const API_URL = "http://localhost:5000/api/categorys";
+
 const AddCategory = () => {
-  const [category] = useState("omar");
+  const [category] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
-    decription: "",
+    description: "",
   });
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: [e.target.value] });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (e) => {
+    // e.preventDefault()
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const exists = await axios.get(`${API_URL}?name=${formData.name}`);
+      if (Array.isArray(exists.data) && exists.data.length > 0) {
+        alert("⚠️ Category already exists!.");
+        setLoading(false);
+        return;
+      }
+      await axios.post(API_URL, formData);
+      alert("Category registred succuessfully");
+      setLoading(false);
+    } catch (error) {
+      console.error("Error", error);
+      if (error.response) {
+        alert(
+          "❌ Error: " +
+            (error.response?.data?.message || "Something went wrong")
+        );
+      } else {
+        alert("❌", error.message);
+      }
+      setLoading(false);
+    }
+  };
   return (
     <div className="bg-white w-full max-w-md mx-auto p-6 rounded-3xl shadow-2xl">
       <div className="flex justify-between items-center mb-4">
@@ -38,7 +67,7 @@ const AddCategory = () => {
           onChange={handleChange}
           placeholder="Enter your Name"
           required
-          className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-2xl "
+          className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
         />
         <label htmlFor="description" className="font-semibold text-gray-700">
           Describtion
@@ -46,17 +75,16 @@ const AddCategory = () => {
         <input
           type="text"
           name="description"
-          value={formData.decription}
+          value={formData.description}
           onChange={handleChange}
           placeholder="Descripte the type of the category"
-          className="w-full font-extralight px-4 py-2 border border-gray-700 rounded-2xl "
+          className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
         />
         <button
           type="submit"
           disabled={loading}
-          className={`text-center text-white text-xl py-2 mt-6 w-full rounded-2xl bg-blue-500 ${
-            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-600"
-          }`}
+          className={`text-center text-white text-xl py-2 mt-6 w-full rounded-2xl bg-blue-500 
+            ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-600"}`}
         >
           Add Category
         </button>

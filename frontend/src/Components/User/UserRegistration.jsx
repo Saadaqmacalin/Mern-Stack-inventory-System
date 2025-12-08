@@ -104,7 +104,7 @@ const UserRegistration = () => {
             onChange={handleChange}
             required
             placeholder="Enter your Name"
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+            className="w-full font-normal px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -119,7 +119,7 @@ const UserRegistration = () => {
             onChange={handleChange}
             required
             placeholder="Enter your email"
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+            className="w-full font-normal px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -134,7 +134,7 @@ const UserRegistration = () => {
             onChange={handleChange}
             required
             placeholder="Enter your Password"
-            className="w-full font-extralight px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+            className="w-full font-normal px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
@@ -146,7 +146,7 @@ const UserRegistration = () => {
             name="Status"
             value={formData.Status}
             onChange={handleChange}
-            className="text-sm font-extralight w-full px-4 py-2 border border-gray-300 rounded-md"
+            className="text-sm font-normal w-full px-4 py-2 border border-gray-300 rounded-md"
           >
             <option value="USER">USER</option>
             <option value="ADMIN">ADMIN</option>

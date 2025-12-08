@@ -1,5 +1,11 @@
 // src/Components/User/userContext.jsx
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/users";
@@ -7,7 +13,7 @@ const API_URL = "http://localhost:5000/api/users";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [users, setUsers] = useState([]);        // actual DB data stored here
+  const [users, setUsers] = useState([]); // actual DB data stored here
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -26,17 +32,20 @@ export const UserProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
-
+  
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
 
-  const refreshUsers = async () => { // refresh 
+  const refreshUsers = async () => {
+    // refresh
     await fetchUsers();
   };
 
   return (
-    <UserContext.Provider value={{ users, setUsers, loading, error, refreshUsers }}>
+    <UserContext.Provider
+      value={{ users, setUsers, loading, error, refreshUsers }}
+    >
       {children}
     </UserContext.Provider>
   );
