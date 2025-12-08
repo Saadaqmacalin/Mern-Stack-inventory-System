@@ -76,7 +76,7 @@ function Sidebar() {
         </NavLink>
 
         <NavLink
-          to="/Categories"
+          to="/AddCategory"
           className={({ isActive }) =>
             isActive
               ? "bg-indigo-600 p-2 rounded text-white"

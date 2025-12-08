@@ -39,10 +39,8 @@ const UserRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setLoading(true);
-
       if (user) {
         // Update existing user
         await axios.patch(`${API_URL}/${user._id}`, formData);
@@ -52,30 +50,25 @@ const UserRegistration = () => {
         // Check if user exists
         const checkRes = await axios.get(`${API_URL}?email=${formData.email}`);
         if (Array.isArray(checkRes.data) && checkRes.data.length > 0) {
-          alert("⚠️ User already exists! Please use another email.");
+          alert("⚠️ User already exists!.");
           setLoading(false);
           return;
         }
-
         // Register new user
         await axios.post(API_URL, formData);
         alert("✅ User registered successfully!");
         await refreshUsers();
       }
-
       setLoading(false);
-
       // ✔ Redirect to home page
       navigate("/Dashboard");
     } catch (err) {
       console.error("Error:", err);
-
       if (err.response) {
         alert("❌" + (err.response.data?.message || "Something went wrong."));
       } else {
         alert("❌" + err.message);
       }
-
       setLoading(false);
     }
   };
@@ -101,7 +94,7 @@ const UserRegistration = () => {
       {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className="mb-4 mt-4">
-          <label htmlFor="name" className="font-medium text-gray-700">
+          <label htmlFor="name" className="font-semibold text-gray-700">
             Name:
           </label>
           <input
