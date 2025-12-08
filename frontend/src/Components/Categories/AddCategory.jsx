@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-const API_URL = "http://localhost:5000/api/categorys";
+const API_URL = "http://localhost:5000/api/categories";
 
 const AddCategory = () => {
   const [category] = useState(null);

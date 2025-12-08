@@ -19,7 +19,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/users", userRouter);
-app.use('/api/categorys',categoryRouter)
+app.use('/api/categories',categoryRouter)
 
 const port = process.env.PORT || 5000;
 
