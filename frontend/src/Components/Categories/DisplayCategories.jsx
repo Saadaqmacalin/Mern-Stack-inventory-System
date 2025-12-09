@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { useCategoryContext } from "../Categories/Categories";
+import { useCategoryContext } from "../Categories/Categories.jsx";
 import { useNavigate } from "react-router";
 import axios from "axios";
 const API_URL = "http://localhost:5000/api/categories";
 
 const DisplayCategories = () => {
-  const { categories, setCategories, loading, error, rerefresh } =
-    useCategoryContext();
+  const { categories, setCategories, loading, error, rerefresh } = useCategoryContext();
 
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
@@ -33,7 +32,7 @@ const DisplayCategories = () => {
         .includes(search.toLowerCase)
     )
   );
-  return <div>DisplayCategories</div>;
+  return <div className="text-center font-bold text-3xl">Display Categories</div>;
 };
 
 export default DisplayCategories;

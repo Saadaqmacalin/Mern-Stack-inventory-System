@@ -6,21 +6,24 @@ import MainLayout from "./Components/MainLayout.jsx";
 import Dashboard from "./Components/Dashboards/Dashboard.jsx";
 import Login from "./Components/User/Login.jsx";
 import {UserProvider} from "./Components/User/userContext.jsx"
-import Categories from "./Components/Categories/Categories.jsx";
+import DisplayCategories from "./Components/Categories/DisplayCategories.jsx";
 import AddCategory from "./Components/Categories/AddCategory.jsx";
+import { CategoryProvider } from "./Components/Categories/Categories.jsx";
 function App() {
   return (
     <UserProvider>
+      <CategoryProvider>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route element={<MainLayout />}>
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Users" element={<GetUsers />} />
-          {/* <Route path="/Categories" element={<Categories />} /> */}
-          <Route path="/AddCategory" element={<AddCategory/>} />
+          <Route path="/DisplayCategories" element={<DisplayCategories />} />
+          {/* <Route path="/AddCategory" element={<AddCategory/>} /> */}
           <Route path="/userRegistration" element={<UserRegistration />} />
         </Route>
       </Routes>
+      </CategoryProvider>
     </UserProvider>
   );
 }
