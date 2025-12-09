@@ -44,7 +44,7 @@ const GetUsers = () => {
         placeholder="Search users..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full md:w-1/2 mb-6 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+        className="w-full md:w-1/2 mb-6 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 "
       />
       <span className="ml-30 h-35 w-35 py-2 px-2 text-white bg-indigo-500 text-2xl font-semibold rounded-2xl">
         Total Users:{users.length}

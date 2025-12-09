@@ -19,7 +19,7 @@ function App() {
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Users" element={<GetUsers />} />
           <Route path="/DisplayCategories" element={<DisplayCategories />} />
-          {/* <Route path="/AddCategory" element={<AddCategory/>} /> */}
+          <Route path="/addCategory" element={<AddCategory/>} />
           <Route path="/userRegistration" element={<UserRegistration />} />
         </Route>
       </Routes>
