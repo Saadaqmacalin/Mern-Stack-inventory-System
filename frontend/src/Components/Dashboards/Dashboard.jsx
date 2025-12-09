@@ -2,13 +2,15 @@ import React from "react";
 import { useUserContext } from "../User/userContext.jsx"; 
 import { FaHome, FaUserPlus, FaMoneyBillWave, FaListAlt ,FaBox} from "react-icons/fa"; // Added more specific icons
 import { useNavigate } from "react-router-dom"; 
+import {useCategoryContext} from "../Categories/Categories.jsx"
 
 const Dashboard = () => {
+  const {categories} = useCategoryContext()
   const { users } = useUserContext(); 
   const navigate = useNavigate(); 
 
   const StatCard = ({ title, value, color, icon: Icon, actionText, onAction }) => (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       <button onClick={onAction} className={`bg-${color}-600 hover:bg-${color}-700
        text-white px-4 py-2 rounded-full font-medium shadow-md 
         duration-150 ease-in-out mb-2`}
@@ -28,7 +30,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-200 p-6 ml-60">
+    <div className="min-h-screen bg-gray-200 p-6 ml-60 pl-30">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 border-b-4
        border-indigo-500 pb-6 flex items-center gap-3">
         <FaHome size={30} className="text-indigo-500" />
@@ -60,8 +62,8 @@ const Dashboard = () => {
 
         {/* Revenue (Static Data for example) */}
         <StatCard 
-          title="Revenue (USD)" 
-          value="$12.5K" 
+          title="Total Categories" 
+          value={categories.length}
           color="indigo" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
           icon={FaMoneyBillWave} 
           actionText="View Report"
@@ -69,6 +71,22 @@ const Dashboard = () => {
         />
 
         {/* Pending Tasks (Static Data for example) */}
+        <StatCard 
+          title="Pending Tasks" 
+          value="5" 
+          color="red" 
+          icon={FaListAlt} 
+          actionText="Review Tasks"
+          onAction={() => console.log('Navigate to Tasks')}
+        />
+        <StatCard 
+          title="Pending Tasks" 
+          value="5" 
+          color="red" 
+          icon={FaListAlt} 
+          actionText="Review Tasks"
+          onAction={() => console.log('Navigate to Tasks')}
+        />
         <StatCard 
           title="Pending Tasks" 
           value="5" 

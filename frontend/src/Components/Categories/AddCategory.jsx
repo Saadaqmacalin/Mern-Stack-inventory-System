@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 const API_URL = "http://localhost:5000/api/categories";
+import {useCategoryContext} from "../Categories/Categories.jsx"
+import { useNavigate } from "react-router";
 
 const AddCategory = () => {
+  const {rerefresh} = useCategoryContext()
   const [category] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +33,7 @@ const AddCategory = () => {
       await axios.post(API_URL, formData);
       alert("Category registred succuessfully");
       setLoading(false);
+      rerefresh()
     } catch (error) {
       console.error("Error", error);
       if (error.response) {
@@ -81,6 +86,7 @@ const AddCategory = () => {
           className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
         />
         <button
+        onClick={()=>navigate("/Dashboard")}
           type="submit"
           disabled={loading}
           className={`text-center text-white text-xl py-2 mt-6 w-full rounded-2xl bg-blue-500 
