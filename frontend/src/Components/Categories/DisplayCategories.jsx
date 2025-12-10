@@ -6,7 +6,7 @@ import axios from "axios";
 const API_URL = "http://localhost:5000/api/categories";
 
 const DisplayCategories = () => {
-  const { categories, setCategories, loading, error, rerefresh } =
+  const { categories, setCategories, loading,setLoading, error, rerefresh } =
     useCategoryContext();
 
   const [search, setSearch] = useState("");
@@ -128,6 +128,7 @@ const DisplayCategories = () => {
               ))
             ) : (
               <tr>
+              {setLoading(false)}
                 <td
                   colSpan="5"
                   className="text-center py-6 text-gray-500 font-medium"

@@ -46,7 +46,7 @@ export const CategoryProvider = ({ children }) => {
 
   return (
     <CategoryContext.Provider
-      value={{ categories, setCategories, loading, error, rerefresh }}
+      value={{ categories, setCategories,setLoading, loading, error, rerefresh }}
     >
       {children}
     </CategoryContext.Provider>
