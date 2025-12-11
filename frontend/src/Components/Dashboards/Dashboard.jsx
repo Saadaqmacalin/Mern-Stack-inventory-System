@@ -82,7 +82,7 @@ const Dashboard = () => {
         <StatCard 
           title="Pending Tasks" 
           value="5" 
-          color="red" 
+          color="indigo" 
           icon={FaListAlt} 
           actionText="Review Tasks"
           onAction={() => console.log('Navigate to Tasks')}
