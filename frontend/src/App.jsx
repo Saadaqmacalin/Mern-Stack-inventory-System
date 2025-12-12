@@ -9,6 +9,7 @@ import {UserProvider} from "./Components/User/userContext.jsx"
 import DisplayCategories from "./Components/Categories/DisplayCategories.jsx";
 import AddCategory from "./Components/Categories/AddCategory.jsx";
 import { CategoryProvider } from "./Components/Categories/Categories.jsx";
+import Products from "./Components/Products/Products.jsx";
 function App() {
   return (
     <UserProvider>
@@ -20,6 +21,7 @@ function App() {
           <Route path="/Users" element={<GetUsers />} />
           <Route path="/DisplayCategories" element={<DisplayCategories />} />
           <Route path="/addCategory" element={<AddCategory/>} />
+          <Route path="/products" element={<Products/>}/>
           <Route path="/userRegistration" element={<UserRegistration />} />
         </Route>
       </Routes>
