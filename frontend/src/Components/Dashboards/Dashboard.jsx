@@ -57,7 +57,7 @@ const Dashboard = () => {
           color="red" 
           icon={FaBox} 
           actionText="view Products"
-          onAction={() => console.log('Navigate to New Project')}
+          onAction={() => navigate('/products')}
         />
 
         {/* Revenue (Static Data for example) */}
@@ -66,8 +66,8 @@ const Dashboard = () => {
           value={categories.length}
           color="indigo" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
           icon={FaMoneyBillWave} 
-          actionText="View Report"
-          onAction={() => navigate('/reports')}
+          actionText="View Categories"
+          onAction={() => navigate('/DisplayCategories')}
         />
 
         {/* Pending Tasks (Static Data for example) */}
