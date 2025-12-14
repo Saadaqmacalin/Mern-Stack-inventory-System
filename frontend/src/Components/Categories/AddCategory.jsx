@@ -17,6 +17,7 @@ const AddCategory = () => {
     name: "",
     description: "",
   });
+  
   useEffect(() => {
     if (category) {
       setFormData({
@@ -29,36 +30,37 @@ const AddCategory = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    if (category) {
-      await axios.patch(`${API_URL}/${category._id}`, formData);
-      alert("Category updated successfully");
-    } else {
-      const exists = await axios.get(`${API_URL}?name=${formData.name}`);
-      if (Array.isArray(exists.data) && exists.data.length > 0) {
-        alert("Category already exists!");
-        return;
+    try {
+      if (category) {
+        await axios.patch(`${API_URL}/${category._id}`, formData);
+        alert("Category updated successfully");
+      } else {
+        const exists = await axios.get(`${API_URL}?name=${formData.name}`);
+        if (Array.isArray(exists.data) && exists.data.length > 0) {
+          alert("Category already exists!");
+          return;
+        }
+        // CREATE CATEGORY
+        await axios.post(API_URL, formData);
+        alert("Category registered successfully");
       }
-
-      // CREATE CATEGORY
-      await axios.post(API_URL, formData);
-      alert("Category registered successfully");
+      rerefresh();
+    } catch (error) {
+      console.error("Error:", error);
+      alert(
+        "Error: " +
+          (error.response?.data?.message ||
+            error.message ||
+            "Something went wrong")
+      );
+    } finally {
+      setLoading(false); // ALWAYS runs
     }
-    rerefresh();      
-  } catch (error) {
-    console.error("Error:", error);
-    alert(
-      "Error: " +
-        (error.response?.data?.message || error.message || "Something went wrong")
-    );
-  } finally {
-    setLoading(false); // ALWAYS runs
-  }
-};
+  };
 
   return (
     <div className="bg-white w-full max-w-md mx-auto p-6 rounded-3xl shadow-2xl">

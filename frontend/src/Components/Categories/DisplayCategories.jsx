@@ -6,7 +6,7 @@ import axios from "axios";
 const API_URL = "http://localhost:5000/api/categories";
 
 const DisplayCategories = () => {
-  const { categories, setCategories, loading,setLoading, error, rerefresh } =
+  const { categories, loading, setLoading, error, rerefresh } =
     useCategoryContext();
 
   const [search, setSearch] = useState("");
@@ -31,7 +31,9 @@ const DisplayCategories = () => {
 
   const filteredData = (categories || []).filter((c) =>
     [c.name, c.description].some((field) =>
-      String(field || "").toLowerCase().includes(search.toLowerCase())
+      String(field || "")
+        .toLowerCase()
+        .includes(search.toLowerCase())
     )
   );
 
@@ -97,10 +99,7 @@ const DisplayCategories = () => {
           <tbody className="text-gray-700 divide-y">
             {filteredData.length ? (
               filteredData.map((c, index) => (
-                <tr
-                  key={c._id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
+                <tr key={c._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 font-medium">{index + 1}</td>
                   <td className="px-6 py-4">{c.name}</td>
                   <td className="px-6 py-4">{c.description}</td>
@@ -128,7 +127,7 @@ const DisplayCategories = () => {
               ))
             ) : (
               <tr>
-              {setLoading(false)}
+                {setLoading(false)}
                 <td
                   colSpan="5"
                   className="text-center py-6 text-gray-500 font-medium"
