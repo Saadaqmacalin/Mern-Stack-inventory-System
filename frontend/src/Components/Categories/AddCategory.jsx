@@ -1,52 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 const API_URL = "http://localhost:5000/api/categories";
-import {useCategoryContext} from "../Categories/Categories.jsx"
-import { useNavigate } from "react-router";
+import { useCategoryContext } from "../Categories/Categories.jsx";
+import { useLocation, useNavigate } from "react-router";
 
 const AddCategory = () => {
-  const {rerefresh} = useCategoryContext()
-  const [category] = useState(null);
+  const { rerefresh } = useCategoryContext();
+  // const [category] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const category = location.state?.category;
 
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
+  useEffect(() => {
+    if (category) {
+      setFormData({
+        name: category.name || "",
+        description: category.description || "",
+      });
+    }
+  }, [category]);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    // e.preventDefault()
-    e.preventDefault();
-    try {
-      setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    if (category) {
+      await axios.patch(`${API_URL}/${category._id}`, formData);
+      alert("Category updated successfully");
+    } else {
       const exists = await axios.get(`${API_URL}?name=${formData.name}`);
       if (Array.isArray(exists.data) && exists.data.length > 0) {
-        alert("⚠️ Category already exists!.");
-        setLoading(false);
+        alert("Category already exists!");
         return;
       }
+
+      // CREATE CATEGORY
       await axios.post(API_URL, formData);
-      alert("Category registred succuessfully");
-      setLoading(false);
-      rerefresh()
-    } catch (error) {
-      console.error("Error", error);
-      if (error.response) {
-        alert(
-          "❌ Error: " +
-            (error.response?.data?.message || "Something went wrong")
-        );
-      } else {
-        alert("❌", error.message);
-      }
-      setLoading(false);
+      alert("Category registered successfully");
     }
-  };
+    rerefresh();      
+  } catch (error) {
+    console.error("Error:", error);
+    alert(
+      "Error: " +
+        (error.response?.data?.message || error.message || "Something went wrong")
+    );
+  } finally {
+    setLoading(false); // ALWAYS runs
+  }
+};
+
   return (
     <div className="bg-white w-full max-w-md mx-auto p-6 rounded-3xl shadow-2xl">
       <div className="flex justify-between items-center mb-4">
@@ -86,7 +99,7 @@ const AddCategory = () => {
           className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
         />
         <button
-        onClick={()=>navigate("/Dashboard")}
+          onClick={() => navigate("/Dashboard")}
           type="submit"
           disabled={loading}
           className={`text-center text-white text-xl py-2 mt-6 w-full rounded-2xl bg-blue-500 
