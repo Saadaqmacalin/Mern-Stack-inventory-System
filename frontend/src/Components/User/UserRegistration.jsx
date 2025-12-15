@@ -164,12 +164,12 @@ const UserRegistration = () => {
           {loading ? "Processing..." : user ? "Update User" : "Register User"}
         </button>
 
-        <h4 className="text-blue600 font-extralight mt-3 ml-18">
+        {/* <h4 className="text-blue600 font-extralight mt-3 ml-18">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-600 underline">
             Login
           </Link>
-        </h4>
+        </h4> */}
       </form>
     </div>
   );
