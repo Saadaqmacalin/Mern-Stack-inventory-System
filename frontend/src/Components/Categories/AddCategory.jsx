@@ -69,6 +69,7 @@ const AddCategory = () => {
           {category ? "Edit Category" : "Add Category"}
         </h2>
         <button
+        onClick={() => navigate("/Dashboard")}
           className="flex gap-1 text-red-600 w-25 h-15  px-2 py-4 items-center 
         font-semibold rounded-3xl bg-gray-100"
         >
