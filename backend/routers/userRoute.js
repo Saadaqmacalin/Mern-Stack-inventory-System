@@ -7,10 +7,12 @@ const {
   updateUser,
   deleteUser,
   login,
+  resetPassword
 } = require("../controllers/user");
 
 router.route("/").post(registerUser).get(getAllUsers);
 router.route("/login").post(login);
+router.route("/resetPassword").patch(resetPassword)
 router.route("/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
 
 module.exports = router;

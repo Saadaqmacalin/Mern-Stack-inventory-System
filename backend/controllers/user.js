@@ -130,7 +130,7 @@ const login = async (req, res) => {
     }
 
     const isPasswordCorrect = user.comparePassword(password);
-    
+
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
@@ -143,14 +143,13 @@ const login = async (req, res) => {
       message: "Login successfully",
       user: {
         name: user.name,
-        password:user.password,
+        password: user.password,
         email: user.email,
-        status: user.Status,   // <-- FIXED
-        id: user._id
+        status: user.Status, // <-- FIXED
+        id: user._id,
       },
       token,
     });
-
   } catch (error) {
     console.error("Error occured while logging in:", error);
     res
@@ -159,6 +158,34 @@ const login = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Please provide email and password" });
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ message: "No user found with this email" });
+  }
+  // tautho hash
+  user.password = password;
+  await user.save();
+
+  const token = user.createJWT();
+
+  res.status(StatusCodes.OK).json({ 
+    success: true, 
+    message: "Password updated successfully",
+    token 
+  });
+};
 
 module.exports = {
   registerUser,
@@ -167,4 +194,5 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+  resetPassword
 };
