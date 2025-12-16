@@ -28,14 +28,13 @@ const Login = () => {
 
     try {
       setLoading(true);
-      
       const res = await axios.post(API_URL, {
         email: user.email,
         password: user.password,
       });
 
       if (
-        res.data.user.email !== user.email &&
+        res.data.user.email !== user.email ||
         res.data.user.password !== user.password
       ) {
         alert("email or password are incorret");
