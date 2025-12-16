@@ -13,15 +13,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle input changes
+  // input changes
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Validate before sending
     if (!user.email || !user.password) {
       alert("Please fill in both email and password.");
@@ -30,11 +28,22 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(API_URL, user);
+      
+      const res = await axios.post(API_URL, {
+        email: user.email,
+        password: user.password,
+      });
+
+      if (
+        res.data.user.email !== user.email &&
+        res.data.user.password !== user.password
+      ) {
+        alert("email or password are incorret");
+        return
+      }
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-      
 
       alert(res.data.message || "Login successful!");
       // alert(`Welcome back, ${user.name || "User"}!`);

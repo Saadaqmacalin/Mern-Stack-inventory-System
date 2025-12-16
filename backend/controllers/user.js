@@ -126,16 +126,16 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Invalid email or password" });
+        .json({ message: "Invalid input email or password" });
     }
 
     const isPasswordCorrect = user.comparePassword(password);
+    
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Password is incorrect" });
+        .json({ message: " Invalid email or password" });
     }
-
     const token = await user.createJWT();
 
     // ✔ INCLUDE STATUS (IMPORTANT!!)
