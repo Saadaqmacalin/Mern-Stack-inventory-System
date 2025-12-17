@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:5000/api/users/login";
 
+
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
@@ -28,18 +29,22 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(API_URL, {
-        email: user.email,
-        password: user.password,
-      });
+      const res = await axios.post(
+        API_URL,
+        {
+          email: user.email,
+          password: user.password,
+        },
+        { withCredentials: true }
+      );
 
-      if (
-        res.data.user.email !== user.email ||
-        res.data.user.password !== user.password
-      ) {
-        alert("email or password are incorret");
-        return
-      }
+      // if (
+      //   res.data.user.email !== user.email ||
+      //   res.data.user.password !== user.password
+      // ) {
+      //   alert("email or password are incorret");
+      //   return
+      // }
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -114,12 +119,12 @@ const Login = () => {
       </form>
 
       <p className="text-sm text-gray-600 text-center mt-4">
-        Don’t have an account?{" "}
+        Forgot Password{" "}
         <span
           onClick={() => navigate("/userRegistration")}
           className="text-blue-600 cursor-pointer hover:underline"
         >
-          Register here
+          Reset here
         </span>
       </p>
     </div>

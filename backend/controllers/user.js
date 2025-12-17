@@ -129,7 +129,7 @@ const login = async (req, res) => {
         .json({ message: "Invalid input email or password" });
     }
 
-    const isPasswordCorrect = user.comparePassword(password);
+    const isPasswordCorrect =  await user.comparePassword(password);
 
     if (!isPasswordCorrect) {
       return res
@@ -145,7 +145,7 @@ const login = async (req, res) => {
         name: user.name,
         password: user.password,
         email: user.email,
-        status: user.Status, // <-- FIXED
+        status: user.status, // <-- FIXED
         id: user._id,
       },
       token,
@@ -159,32 +159,31 @@ const login = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Please provide email and password" });
+    if (!email || !password) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Please provide email and password" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({ message: "No user found with this email" });
+    }
+    // auto hash
+    user.password = password;
+    await user.save();
+
+    const token = user.createJWT();
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Password updated successfully",
+      token,
+    });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Reset failed" });
   }
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ message: "No user found with this email" });
-  }
-  // tautho hash
-  user.password = password;
-  await user.save();
-
-  const token = user.createJWT();
-
-  res.status(StatusCodes.OK).json({ 
-    success: true, 
-    message: "Password updated successfully",
-    token 
-  });
 };
 
 module.exports = {
@@ -194,5 +193,5 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
-  resetPassword
+  resetPassword,
 };

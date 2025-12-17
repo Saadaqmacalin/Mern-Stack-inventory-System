@@ -3,14 +3,14 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 
-const authHeader = require('./middlewares/authenticationHeader')
+const authHeader = require("./middlewares/authenticationHeader");
 const userRouter = require("./routers/userRoute");
-const categoryRouter = require('./routers/categoryRouter')
+const categoryRouter = require("./routers/categoryRouter");
 const connectDB = require("./db/connectDB");
 
 app.use(
   cors({
-    origin: "http://localhost:5173", //  React frontend
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
@@ -19,7 +19,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/users", userRouter);
-app.use('/api/categories',categoryRouter)
+app.use("/api/categories", categoryRouter);
 
 const port = process.env.PORT || 5000;
 

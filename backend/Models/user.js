@@ -32,10 +32,6 @@ const userSchema = new mongoose.Schema(
       default: "USER",
     },
 
-    /* =========================
-       RELATIONSHIPS
-    ========================== */
-
     // One-to-One → Profile
     profile: {
       type: mongoose.Schema.Types.ObjectId,
@@ -81,13 +77,14 @@ const userSchema = new mongoose.Schema(
         ref: "Help",
       },
     ],
+
   },
   { timestamps: true }
 );
 
 // Hash password before saving
-userSchema.pre("save", async function () { // hash only when the password updated 
-  if (!this.isModified("password")) return; 
+userSchema.pre("save", async function (next) { 
+  if (!this.isModified("password")) return next();  // hash only when the password updated 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
