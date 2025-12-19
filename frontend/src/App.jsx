@@ -10,12 +10,14 @@ import DisplayCategories from "./Components/Categories/DisplayCategories.jsx";
 import AddCategory from "./Components/Categories/AddCategory.jsx";
 import { CategoryProvider } from "./Components/Categories/Categories.jsx";
 import Products from "./Components/Products/Products.jsx";
+import ResetPassword from "./Components/User/ResetPassword.jsx";
 function App() {
   return (
     <UserProvider>
       <CategoryProvider>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/resetpassword" element={<ResetPassword/>}/>
         <Route element={<MainLayout />}>
           <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Users" element={<GetUsers />} />
