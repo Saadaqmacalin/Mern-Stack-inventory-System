@@ -12,7 +12,7 @@ const {
 
 router.route("/").post(registerUser).get(getAllUsers);
 router.route("/login").post(login);
-router.route("/resetPassword").patch(resetPassword)
+router.route("/resetpassword").patch(resetPassword)
 router.route("/:id").get(getSingleUser).patch(updateUser).delete(deleteUser);
 
 module.exports = router;

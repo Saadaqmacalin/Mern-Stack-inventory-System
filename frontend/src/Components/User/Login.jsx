@@ -71,7 +71,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-white w-full max-w-md mx-auto p-6 rounded-4xl shadow-2xl mt-10">
+    <div className="bg-white w-full max-w-md mx-auto p-6 rounded-4xl shadow-2xl mt-20">
       <h2 className="text-xl font-bold text-blue-600 text-center mb-4">
         Login
       </h2>
@@ -121,7 +121,7 @@ const Login = () => {
       <p className="text-sm text-gray-600 text-center mt-4">
         Forgot Password{" "}
         <span
-          onClick={() => navigate("/userRegistration")}
+          onClick={() => navigate("/resetpassword")}
           className="text-blue-600 cursor-pointer hover:underline"
         >
           Reset here
