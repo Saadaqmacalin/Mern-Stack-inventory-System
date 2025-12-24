@@ -2,21 +2,12 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    productId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     productName: {
       type: String,
       required: true,
       trim: true,
     },
-    sku: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -35,12 +26,18 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
-      min: 0,
+      validate: {
+        validator: function (value) {
+          return value > this.costPrice;
+        },
+        message: "price must be greater than cost price",
+      },
     },
+
     costPrice: {
       type: Number,
       required: true,
-      min: 0,
+      min: [0.01, "the price must be greaterthan zero "],
     },
     status: {
       type: String,
@@ -49,7 +46,7 @@ const productSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

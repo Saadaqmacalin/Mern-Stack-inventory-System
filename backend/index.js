@@ -6,6 +6,7 @@ const app = express();
 const authHeader = require("./middlewares/authenticationHeader");
 const userRouter = require("./routers/userRoute");
 const categoryRouter = require("./routers/categoryRouter");
+const productsRouters = require("./routers/productsRouters");
 const connectDB = require("./db/connectDB");
 
 app.use(
@@ -20,6 +21,7 @@ app.use(express.json());
 
 app.use("/api/users", userRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/products", productsRouters);
 
 const port = process.env.PORT || 5000;
 
