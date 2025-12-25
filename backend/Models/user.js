@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import { Schema, model } from "mongoose";
+import { genSalt, hash, compare } from "bcrypt";
+import jwt from 'jsonwebtoken';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -34,14 +34,14 @@ const userSchema = new mongoose.Schema(
 
     // One-to-One → Profile
     profile: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Profile",
     },
 
     // One-to-Many → Purchases
     purchases: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Purchase",
       },
     ],
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
     // One-to-Many → Sales
     sales: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Sale",
       },
     ],
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
     // One-to-Many → Orders
     orders: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Order",
       },
     ],
@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
     // One-to-Many → Reports
     reports: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Report",
       },
     ],
@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema(
     // One-to-Many → Help Tickets
     helpRequests: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Help",
       },
     ],
@@ -85,13 +85,13 @@ const userSchema = new mongoose.Schema(
 // Hash password before saving
 userSchema.pre("save", async function (next) { 
   if (!this.isModified("password")) return next();  // hash only when the password updated 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  const salt = await genSalt(10);
+  this.password = await hash(this.password, salt);
 });
 
 // Compare password
 userSchema.methods.comparePassword = async function (reqPassword) {
-  return await bcrypt.compare(reqPassword, this.password);
+  return await compare(reqPassword, this.password);
 };
 
 // Create JWT
@@ -109,4 +109,4 @@ userSchema.methods.createJWT = function () {
   );
 };
 
-module.exports = mongoose.model("Users", userSchema);
+export default model("Users", userSchema);

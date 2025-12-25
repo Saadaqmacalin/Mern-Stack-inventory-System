@@ -1,12 +1,13 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
+import categoryMethods from "../controllers/category.js";
 const {
   addCategory,
   getAllCategories,
   getaSingleCategory,
   updateCategory,
   deleteCategory,
-} = require("../controllers/category");
+} = categoryMethods;
 
 router.route("/").post(addCategory).get(getAllCategories);
 router
@@ -15,4 +16,4 @@ router
   .patch(updateCategory)
   .delete(deleteCategory);
 
-module.exports = router;
+export default router;

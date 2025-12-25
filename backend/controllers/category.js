@@ -1,5 +1,5 @@
-const Categories = require("../Models/category");
-const { StatusCodes } = require("http-status-codes");
+import Categories from "../Models/category.js";
+import { StatusCodes } from "http-status-codes";
 
 const addCategory = async (req, res) => {
   try {
@@ -119,7 +119,7 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   addCategory,
   getAllCategories,
   getaSingleCategory,

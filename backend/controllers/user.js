@@ -1,6 +1,5 @@
-const { STATES } = require("mongoose");
-const User = require("../Models/user");
-const { StatusCodes } = require("http-status-codes");
+import { STATES } from "mongoose";
+import { StatusCodes } from "http-status-codes";
 
 const registerUser = async (req, res) => {
   try {
@@ -10,13 +9,13 @@ const registerUser = async (req, res) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "name email status and passsword must be provided " });
     }
-    const exists = await User.findOne({ email });
+    const exists = await findOne({ email });
     if (exists) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "user already exists" });
     }
-    const user = await User.create({ ...req.body });
+    const user = await create({ ...req.body });
     const token = await user.createJWT();
     res.status(StatusCodes.OK).json({ message: "User created successfully " });
   } catch (error) {
@@ -29,7 +28,7 @@ const registerUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, { password: 0 }); // password is exlusive that means it won't return
+    const users = await find({}, { password: 0 }); // password is exlusive that means it won't return
     if (users.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -47,7 +46,7 @@ const getAllUsers = async (req, res) => {
 const getSingleUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).select("-password");
+    const user = await findById(id).select("-password");
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -72,7 +71,7 @@ const updateUser = async (req, res) => {
         .json({ message: "please provide at least one field to update" });
     }
 
-    const user = await User.findByIdAndUpdate(
+    const user = await findByIdAndUpdate(
       id,
       { name, email, password, Status },
       { new: true, runValidators: true }
@@ -97,7 +96,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findByIdAndDelete(id);
+    const user = await findByIdAndDelete(id);
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -122,14 +121,14 @@ const login = async (req, res) => {
         .json({ message: "email and password are needed" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await findOne({ email });
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "Invalid input email or password" });
     }
 
-    const isPasswordCorrect =  await user.comparePassword(password);
+    const isPasswordCorrect = await user.comparePassword(password);
 
     if (!isPasswordCorrect) {
       return res
@@ -163,12 +162,16 @@ const resetPassword = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: "Please provide email and password" });
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Please provide email and password" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await findOne({ email });
     if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "No user found with this email" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "No user found with this email" });
     }
     // auto hash
     user.password = password;
@@ -182,11 +185,13 @@ const resetPassword = async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Reset failed" });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "Reset failed" });
   }
 };
 
-module.exports = {
+export default {
   registerUser,
   getAllUsers,
   getSingleUser,
