@@ -1,116 +1,134 @@
-import { STATES } from "mongoose";
 import { StatusCodes } from "http-status-codes";
+import Users from "../models/User.js";
 
+// 1. REGISTER USER
 const registerUser = async (req, res) => {
   try {
     const { name, email, Status, password } = req.body || {};
+    
+    // Check all fields
     if (!name || !email || !Status || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "name email status and passsword must be provided " });
+        .json({ message: "Name, email, status, and password must be provided" });
     }
-    const exists = await findOne({ email });
+
+    const exists = await Users.findOne({ email });
     if (exists) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "user already exists" });
+        .json({ message: "User already exists" });
     }
-    const user = await create({ ...req.body });
-    const token = await user.createJWT();
-    res.status(StatusCodes.OK).json({ message: "User created successfully " });
+
+    // Password auto-hashing should be handled in your User Schema Middleware
+    const user = await Users.create({ ...req.body });
+    const token = user.createJWT(); // Call on instance, usually not awaited unless it's a custom async function
+
+    res.status(StatusCodes.CREATED).json({ message: "User created successfully", token });
   } catch (error) {
-    console.error("error ocured while registering a user", error);
+    console.error("Error occurred while registering a user", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ messsage: "Something went wronge while registering a user " });
+      .json({ message: "Something went wrong while registering a user" });
   }
 };
 
+// 2. GET ALL USERS
 const getAllUsers = async (req, res) => {
   try {
-    const users = await find({}, { password: 0 }); // password is exlusive that means it won't return
+    // FIXED: Must call find() on the 'Users' model
+    const users = await Users.find({}, { password: 0 }); 
+    
     if (users.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ messsage: "Not found any user" });
+        .json({ message: "No users found" });
     }
     res.status(StatusCodes.OK).json({ totalUsers: users.length, users });
   } catch (error) {
-    console.error("error ocured while fetching users", error);
+    console.error("Error occurred while fetching users", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ Message: "Something went wronge wile fetching users" });
+      .json({ message: "Something went wrong while fetching users" });
   }
 };
 
+// 3. GET SINGLE USER
 const getSingleUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await findById(id).select("-password");
+    // FIXED: Must call findById on 'Users'
+    const user = await Users.findById(id).select("-password");
+    
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "User not Found " });
+        .json({ message: "User not Found" });
     }
-    res.status(StatusCodes.OK).json({ User: user });
+    res.status(StatusCodes.OK).json({ user });
   } catch (error) {
-    console.error("error ocured while fetching a user", error);
+    console.error("Error occurred while fetching a user", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Something went wronge while fetching a user" });
+      .json({ message: "Something went wrong while fetching a user" });
   }
 };
 
+// 4. UPDATE USER
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, password, Status } = req.body;
+
     if (!name && !email && !password && !Status) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "please provide at least one field to update" });
+        .json({ message: "Please provide at least one field to update" });
     }
 
-    const user = await findByIdAndUpdate(
+    // FIXED: Must call findByIdAndUpdate on 'Users'
+    const user = await Users.findByIdAndUpdate(
       id,
       { name, email, password, Status },
       { new: true, runValidators: true }
-    );
+    ).select("-password");
 
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "The user you want to Update does not exist" });
+        .json({ message: "The user you want to update does not exist" });
     }
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "User Updated Succesefully ", user });
+    res.status(StatusCodes.OK).json({ message: "User updated successfully", user });
   } catch (error) {
-    console.error("error ocured while updating  a user", error);
+    console.error("Error occurred while updating a user", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Something went wrong while updating the user" });
   }
 };
 
+// 5. DELETE USER
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await findByIdAndDelete(id);
+    // FIXED: Must call findByIdAndDelete on 'Users'
+    const user = await Users.findByIdAndDelete(id);
+    
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "the user you want to delete does not exists" });
+        .json({ message: "The user you want to delete does not exist" });
     }
-    res.status(StatusCodes.OK).json({ message: "User has been deleted", user });
+    res.status(StatusCodes.OK).json({ message: "User has been deleted" });
   } catch (error) {
-    console.error("Error Ocured while deleting a user", error);
+    console.error("Error occurred while deleting a user", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Something went wrong while deleting the user" });
   }
 };
 
+// 6. LOGIN
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -118,45 +136,45 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "email and password are needed" });
+        .json({ message: "Email and password are required" });
     }
 
-    const user = await findOne({ email });
+    // FIXED: Must call findOne on 'Users'
+    const user = await Users.findOne({ email });
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Invalid input email or password" });
+        .json({ message: "Invalid email or password" });
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
-
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: " Invalid email or password" });
+        .json({ message: "Invalid email or password" });
     }
-    const token = await user.createJWT();
 
-    // ✔ INCLUDE STATUS (IMPORTANT!!)
+    const token = user.createJWT();
+
     res.status(StatusCodes.OK).json({
-      message: "Login successfully",
+      message: "Login successful",
       user: {
         name: user.name,
-        password: user.password,
         email: user.email,
-        status: user.status, // <-- FIXED
+        status: user.Status, // Matches your schema field name
         id: user._id,
       },
       token,
     });
   } catch (error) {
-    console.error("Error occured while logging in:", error);
+    console.error("Error occurred while logging in:", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: "Something went wrong while trying to log in" });
   }
 };
 
+// 7. RESET PASSWORD
 const resetPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -167,15 +185,16 @@ const resetPassword = async (req, res) => {
         .json({ message: "Please provide email and password" });
     }
 
-    const user = await findOne({ email });
+    // FIXED: Must call findOne on 'Users'
+    const user = await Users.findOne({ email });
     if (!user) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "No user found with this email" });
     }
-    // auto hash
+
     user.password = password;
-    await user.save();
+    await user.save(); // This triggers 'pre-save' hooks for hashing
 
     const token = user.createJWT();
 
@@ -191,7 +210,7 @@ const resetPassword = async (req, res) => {
   }
 };
 
-export default {
+export {
   registerUser,
   getAllUsers,
   getSingleUser,

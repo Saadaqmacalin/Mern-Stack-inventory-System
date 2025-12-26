@@ -6,6 +6,7 @@ const addProduct = async (req, res) => {
     
     const {
       productName,
+      image,
       categoryId,
       supplierId,
       description,
@@ -14,7 +15,7 @@ const addProduct = async (req, res) => {
       status,
     } = req.body || {};
 
-    const image = req.file ? req.file.path : null; 
+    // const image = req.file ? req.file.path : null; 
 
     if (
       !productName ||

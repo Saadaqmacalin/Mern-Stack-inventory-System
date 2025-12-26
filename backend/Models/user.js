@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose"; // Import mongoose to access .models
 import { genSalt, hash, compare } from "bcrypt";
 import jwt from 'jsonwebtoken';
 
@@ -11,7 +11,6 @@ const userSchema = new Schema(
       required: [true, "name must be provided"],
       trim: true,
     },
-
     email: {
       type: String,
       unique: true,
@@ -19,72 +18,32 @@ const userSchema = new Schema(
       required: [true, "email must be provided"],
       trim: true,
     },
-
     password: {
       type: String,
       minlength: 8,
       required: [true, "password must be provided"],
     },
-
     status: {
       type: String,
       enum: ["ADMIN", "USER"],
       default: "USER",
     },
-
-    // One-to-One → Profile
     profile: {
       type: Schema.Types.ObjectId,
       ref: "Profile",
     },
-
-    // One-to-Many → Purchases
-    purchases: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Purchase",
-      },
-    ],
-
-    // One-to-Many → Sales
-    sales: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Sale",
-      },
-    ],
-
-    // One-to-Many → Orders
-    orders: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
-
-    // One-to-Many → Reports
-    reports: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Report",
-      },
-    ],
-
-    // One-to-Many → Help Tickets
-    helpRequests: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Help",
-      },
-    ],
-
+    purchases: [{ type: Schema.Types.ObjectId, ref: "Purchase" }],
+    sales: [{ type: Schema.Types.ObjectId, ref: "Sale" }],
+    orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+    reports: [{ type: Schema.Types.ObjectId, ref: "Report" }],
+    helpRequests: [{ type: Schema.Types.ObjectId, ref: "Help" }],
   },
   { timestamps: true }
 );
 
 // Hash password before saving
 userSchema.pre("save", async function (next) { 
-  if (!this.isModified("password")) return next();  // hash only when the password updated 
+  if (!this.isModified("password")) return next();
   const salt = await genSalt(10);
   this.password = await hash(this.password, salt);
 });
@@ -103,10 +62,12 @@ userSchema.methods.createJWT = function () {
       status: this.status,
     },
     process.env.JWT_SECRET,
-    {
-      expiresIn: "30d",
-    }
+    { expiresIn: "30d" }
   );
 };
 
-export default model("Users", userSchema);
+// --- FIXED EXPORT SECTION ---
+// Checks if the model already exists before creating it
+const Users = mongoose.models.Users || model("Users", userSchema);
+
+export default Users;

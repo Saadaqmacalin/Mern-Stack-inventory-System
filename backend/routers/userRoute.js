@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
-import userMethods from "../controllers/user.js";
-const {
+
+import {
   registerUser,
   getAllUsers,
   getSingleUser,
@@ -9,7 +9,7 @@ const {
   deleteUser,
   login,
   resetPassword,
-} = userMethods;
+} from "../controllers/user.js";
 
 router.route("/").post(registerUser).get(getAllUsers);
 router.route("/login").post(login);
