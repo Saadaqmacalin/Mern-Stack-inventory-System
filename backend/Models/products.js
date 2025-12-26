@@ -7,7 +7,7 @@ const productSchema = new Schema(
       required: true,
       trim: true,
     },
-    
+
     image: {
       type: String,
       required: [true, "Please upload a product image"],

@@ -23,10 +23,26 @@ const addSuppliers = async (req, res) => {
   }
 };
 
-const getSuliers = async (req,res)=>{
+const getSuppliers = async (req, res) => {
+  try {
+    const suppliers = await Suppliers.find({});
+    if (!suppliers || suppliers === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: "Not Found a supplier",
+      });
+    }
+    res
+      .status(StatusCodes.OK)
+      .json({ TotalSuppliers: suppliers.length, suppliers });
+  } catch (error) {
+    console.error(`error ocured while getting all the suppliers: ${error}`);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: "something went wronge while getting the suppliers" });
+  }
+};
 
-}
-
-export default{
-    addSuppliers
-}
+export default {
+  addSuppliers,
+  getSuppliers,
+};
