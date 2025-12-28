@@ -131,4 +131,5 @@ export default {
   getSuppliers,
   getSupplierById,
   UpdateSupplier,
+  deleteSupplier
 };
