@@ -137,7 +137,7 @@ const deleteSupplier = async (req, res) => {
   }
 };
 
-export default {
+export  {
   addSuppliers,
   getSuppliers,
   getSupplierById,
