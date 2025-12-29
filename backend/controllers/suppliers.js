@@ -1,27 +1,38 @@
-import { STATES } from "mongoose";
 import Suppliers from "../Models/suppliers.js";
 import { StatusCodes } from "http-status-codes";
 
 const addSuppliers = async (req, res) => {
   try {
-    const { companyName, email, phone, address, category, status } =
-      req.body || {};
-    if (!companyName || !email || !phone || !address || !category || !status) {
+    const { companyName, email, phone, address, category, status } = req.body;
+
+    if (
+      !companyName ||
+      !email ||
+      !phone ||
+      !category ||
+      !status && !address||
+      Object.keys(address).length === 0
+    ) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        message: "All feilds must be profiveded",
+        message:
+          "All feilds must be provided",
       });
     }
-    const supplier = await Suppliers.create({ ...req.body });
+    const supplier = await Suppliers.create(req.body)
     res.status(StatusCodes.CREATED).json({
-      message: "supplier added successfully",
+      message: "Supplier added successfully",
       supplier,
     });
+
   } catch (error) {
-    console.error(`error ocured while adding supplier: ${error}`);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Something went wronge while adding a supplier",
-      error: error.message,
-    });
+    if (error.code === 11000) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Email or Company Name already exists" });
+    }
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: error.message });
   }
 };
 
@@ -131,5 +142,5 @@ export default {
   getSuppliers,
   getSupplierById,
   UpdateSupplier,
-  deleteSupplier
+  deleteSupplier,
 };

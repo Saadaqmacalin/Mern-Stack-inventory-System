@@ -36,7 +36,7 @@ const suppliersSchema = new Schema(
       type: [String], // e.g., ['Raw Materials', 'Electronics', 'Packaging']
       required: true,
     },
-    statusc: {
+    status: {
       type: String,
       enum: ["Active", "Inactive", "Pending", "Blacklisted"],
       default: "Active",
