@@ -119,7 +119,7 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-export default {
+export {
   addCategory,
   getAllCategories,
   getaSingleCategory,
