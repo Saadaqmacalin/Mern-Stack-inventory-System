@@ -1,6 +1,5 @@
 import { Router } from "express";
 const router = Router();
-// import suppliersMethods from "../controllers/suppliers.js";
 import {
   addSuppliers,
   getSuppliers,

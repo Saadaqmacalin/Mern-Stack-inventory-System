@@ -1,9 +1,8 @@
-import products from "../Models/products.js";
+import Products from "../Models/products.js";
 import { StatusCodes } from "http-status-codes";
 
 const addProduct = async (req, res) => {
   try {
-    
     const {
       productName,
       image,
@@ -15,11 +14,11 @@ const addProduct = async (req, res) => {
       status,
     } = req.body || {};
 
-    // const image = req.file ? req.file.path : null; 
+    // const image = req.file ? req.file.path : null;
 
     if (
       !productName ||
-      !image || 
+      !image ||
       !categoryId ||
       !supplierId ||
       !description ||
@@ -34,7 +33,7 @@ const addProduct = async (req, res) => {
 
     const product = await products.create({
       productName,
-      image, 
+      image,
       categoryId,
       supplierId,
       description,
@@ -44,9 +43,8 @@ const addProduct = async (req, res) => {
     });
 
     res
-      .status(StatusCodes.CREATED) 
+      .status(StatusCodes.CREATED)
       .json({ message: "Product added successfully", product });
-
   } catch (error) {
     console.error("Error occurred while adding a product:", error);
     res
@@ -55,6 +53,26 @@ const addProduct = async (req, res) => {
   }
 };
 
-export default {
+const getProducts = async (req, res) => {
+  try {
+    const products = await Products.find({});
+    if (products === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Not Found any product" });
+    }
+    res.status(StatusCodes.OK).json({ products });
+  } catch (error) {
+    console.error(`Error ocured while retreiving products: ${error}`);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({
+        message: "Something went wronge while getting all the products",
+      });
+  }
+};
+
+export  {
   addProduct,
+  getProducts,
 };
