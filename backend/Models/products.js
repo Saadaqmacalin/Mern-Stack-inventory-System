@@ -16,13 +16,14 @@ const productSchema = new Schema(
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+
+      required: [true, "category Id must be provided "],
     },
 
     supplierId: {
       type: Schema.Types.ObjectId,
       ref: "Supplier",
-      required: true,
+      required: [true, "supplier Id must be provided "],
     },
 
     description: {
