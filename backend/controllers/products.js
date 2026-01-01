@@ -31,7 +31,7 @@ const addProduct = async (req, res) => {
         .json({ message: "All fields must be provided, including an image" });
     }
 
-    const product = await products.create({
+    const product = await Products.create({
       productName,
       image,
       categoryId,
@@ -49,7 +49,10 @@ const addProduct = async (req, res) => {
     console.error("Error occurred while adding a product:", error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "Something went wrong while adding the product" });
+      .json({
+        message: "Something went wrong while adding the product",
+        message: error.message,
+      });
   }
 };
 
@@ -64,15 +67,14 @@ const getProducts = async (req, res) => {
     res.status(StatusCodes.OK).json({ products });
   } catch (error) {
     console.error(`Error ocured while retreiving products: ${error}`);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({
-        message: "Something went wronge while getting all the products",
-      });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wronge while getting all the products",
+    });
   }
 };
 
-export  {
-  addProduct,
-  getProducts,
-};
+const updateProduct = async (req,res)=>{
+  
+}
+
+export { addProduct, getProducts };

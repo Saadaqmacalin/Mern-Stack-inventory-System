@@ -21,6 +21,7 @@ const suppliersSchema = new Schema(
     },
     phone: {
       type: String,
+      unique:true,
       required: [true, "Phone number is required"],
     },
 

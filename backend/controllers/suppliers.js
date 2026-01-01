@@ -10,29 +10,27 @@ const addSuppliers = async (req, res) => {
       !email ||
       !phone ||
       !category ||
-      !status && !address||
+      (!status && !address) ||
       Object.keys(address).length === 0
     ) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        message:
-          "All feilds must be provided",
+        message: "All feilds must be provided",
       });
     }
-    const supplier = await Suppliers.create(req.body)
+    const supplier = await Suppliers.create(req.body);
     res.status(StatusCodes.CREATED).json({
       message: "Supplier added successfully",
       supplier,
     });
-
   } catch (error) {
     if (error.code === 11000) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Email or Company Name already exists" });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: "Email , phone Number or Company Name already exists",
+      });
     }
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: error.message });
+      .json({mess:"Something went wronge while adding suppliers", message: error.message });
   }
 };
 
@@ -79,9 +77,17 @@ const getSupplierById = async (req, res) => {
 
 const UpdateSupplier = async (req, res) => {
   try {
-    const { id } = req.param;
+    const { id } = req.params;
     const { companyName, email, phone, address, category, status } = req.body;
-    if ((!companyName, !email, !phone, !address, !category, !status)) {
+    if (
+      !companyName &&
+      !email  &&
+      !phone  &&
+      !category  &&
+      !status  &&
+      !address  &&
+      !Object.keys(address).length == 0
+    ) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "please profide at least one feild to " });
@@ -117,7 +123,7 @@ const UpdateSupplier = async (req, res) => {
 
 const deleteSupplier = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const supplier = await Suppliers.findByIdAndDelete(id);
     if (!supplier) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -137,7 +143,7 @@ const deleteSupplier = async (req, res) => {
   }
 };
 
-export  {
+export {
   addSuppliers,
   getSuppliers,
   getSupplierById,
