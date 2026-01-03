@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import GetUsers from "./Components/User/GetUsers.jsx";
 import UserRegistration from "./Components/User/UserRegistration.jsx";
 import "./index.css";
@@ -11,6 +11,7 @@ import AddCategory from "./Components/Categories/AddCategory.jsx";
 import { CategoryProvider } from "./Components/Categories/Categories.jsx";
 import Products from "./Components/Products/Products.jsx";
 import ResetPassword from "./Components/User/ResetPassword.jsx";
+import Suppliers from "./Components/Suppliers/suppliers.jsx";
 function App() {
   return (
     <UserProvider>
@@ -24,6 +25,7 @@ function App() {
           <Route path="/DisplayCategories" element={<DisplayCategories />} />
           <Route path="/addCategory" element={<AddCategory/>} />
           <Route path="/products" element={<Products/>}/>
+          <Route path="/suppliers" element={<Suppliers/>}/>
           <Route path="/userRegistration" element={<UserRegistration />} />
         </Route>
       </Routes>

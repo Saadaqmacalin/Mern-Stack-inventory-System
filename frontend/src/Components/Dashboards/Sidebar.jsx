@@ -90,7 +90,7 @@ function Sidebar() {
         </NavLink>
 
         <NavLink
-          to="/sppliers"
+          to="/suppliers"
           className={({ isActive }) =>
             isActive
               ? "bg-indigo-600 p-2 rounded text-white"
