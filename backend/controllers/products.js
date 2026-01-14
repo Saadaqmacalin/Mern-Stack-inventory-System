@@ -6,7 +6,6 @@ const addProduct = async (req, res) => {
   try {
     const {
       productName,
-      image,
       categoryId,
       supplierId,
       description,
@@ -18,7 +17,6 @@ const addProduct = async (req, res) => {
 
     if (
       !productName ||
-      !image ||
       !categoryId ||
       !supplierId ||
       !description ||
@@ -33,7 +31,6 @@ const addProduct = async (req, res) => {
 
     const product = await Products.create({
       productName,
-      image,
       categoryId,
       supplierId,
       description,
@@ -118,7 +115,6 @@ const updateProduct = async (req, res) => {
     }
 
     Object.assign(product, req.body);
-
     await product.save(); // ✅ full document validation works
 
     res.status(200).json({

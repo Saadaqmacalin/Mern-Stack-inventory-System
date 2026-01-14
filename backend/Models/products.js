@@ -8,11 +8,6 @@ const productSchema = new Schema(
       trim: true,
     },
 
-    image: {
-      type: String,
-      required: [true, "Please upload a product image"],
-    },
-
     categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
