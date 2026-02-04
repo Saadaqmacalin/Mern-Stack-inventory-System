@@ -8,8 +8,13 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/category.js";
+import validate from "../middlewares/validationMiddleware.js";
+import { categorySchema } from "../validations/categoryValidation.js";
 
-router.route("/").post(addCategory).get(getAllCategories);
+router.route("/")
+  .post(validate(categorySchema), addCategory)
+  .get(getAllCategories);
+
 router
   .route("/:id")
   .get(getaSingleCategory)

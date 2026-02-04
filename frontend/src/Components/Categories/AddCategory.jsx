@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import axios from "axios";
-const API_URL = "http://localhost:5000/api/categories";
-import { useCategoryContext } from "../Categories/Categories.jsx";
-import { useLocation, useNavigate } from "react-router";
+import { FaTimes, FaSave } from "react-icons/fa";
+import { useAppContext } from "../../contexts/AppContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import Card from "../ui/Card";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
 
 const AddCategory = () => {
-  const { rerefresh } = useCategoryContext();
-  // const [category] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { actions, loading } = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
   const category = location.state?.category;
@@ -26,91 +25,108 @@ const AddCategory = () => {
       });
     }
   }, [category]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
+      let result;
       if (category) {
-        await axios.patch(`${API_URL}/${category._id}`, formData);
-        alert("Category updated successfully");
+        result = await actions.updateCategory(category._id, formData);
       } else {
-        const exists = await axios.get(`${API_URL}?name=${formData.name}`);
-        if (Array.isArray(exists.data) && exists.data.length > 0) {
-          alert("Category already exists!");
-          return;
-        }
-        // CREATE CATEGORY
-        await axios.post(API_URL, formData);
-        alert("Category registered successfully");
+        result = await actions.addCategory(formData);
       }
-      rerefresh();
+
+      if (result.success) {
+        actions.addNotification({
+           type: 'success',
+           message: category ? "Category updated successfully" : "Category created successfully"
+        });
+        navigate("/categories");
+      } else {
+        actions.addNotification({ type: 'error', message: result.error || 'Failed to save category' });
+      }
     } catch (error) {
-      console.error("Error:", error);
-      alert(
-        "Error: " +
-          (error.response?.data?.message ||
-            error.message ||
-            "Something went wrong")
-      );
-    } finally {
-      setLoading(false); // ALWAYS runs
+      actions.addNotification({ type: 'error', message: "An unexpected error occurred" });
     }
   };
 
   return (
-    <div className="bg-white w-full max-w-md mx-auto p-6 rounded-3xl shadow-2xl">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-black text-blue-600">
-          {category ? "Edit Category" : "Add Category"}
-        </h2>
-        <button
-        onClick={() => navigate("/Dashboard")}
-          className="flex gap-1 text-red-600 w-25 h-15  px-2 py-4 items-center 
-        font-semibold rounded-3xl bg-gray-100"
-        >
-          <FaTimes className="text-red-600" /> <span>Close</span>
-        </button>
+    <div className="max-w-2xl mx-auto mt-20 px-4">
+      <Card className="overflow-hidden border-none shadow-2xl shadow-indigo-100/50">
+        <div className="bg-white p-8 border-b border-gray-100 flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-black text-gray-900 leading-tight">
+              {category ? "Modify Category" : "New Classification"}
+            </h2>
+            <p className="text-gray-400 font-medium text-sm">Define how your inventory items are grouped</p>
+          </div>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate("/categories")}
+            className="text-gray-300 hover:text-red-500"
+          >
+            <FaTimes size={18} />
+          </Button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+          <Input
+            label="Category Title"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="e.g. Raw Materials, Finished Goods"
+            required
+            className="text-lg font-bold"
+          />
+          
+          <div className="space-y-2">
+            <label className="block text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Context & Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Provide a brief explanation of what belongs in this category..."
+              rows={5}
+              className="block w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm transition-all"
+            />
+          </div>
+
+          <div className="pt-6 border-t border-gray-50 flex flex-col md:flex-row justify-end items-center gap-4">
+             <Button 
+                type="button" 
+                variant="ghost" 
+                onClick={() => navigate("/categories")}
+                className="w-full md:w-auto text-gray-400 font-bold"
+             >
+                Cancel
+             </Button>
+             <Button 
+                type="submit" 
+                variant="primary" 
+                loading={loading}
+                size="lg"
+                className="w-full md:w-auto px-12 rounded-xl shadow-lg shadow-indigo-100/50"
+             >
+                <FaSave className="mr-2" />
+                {category ? "Apply Changes" : "Create Category"}
+             </Button>
+          </div>
+        </form>
+      </Card>
+      
+      <div className="mt-8 p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100/30">
+        <p className="text-xs text-indigo-400 font-medium leading-relaxed">
+            <span className="font-black mr-1">Pro Tip:</span> 
+            Clear and distinct categories help in generating more accurate reports and maintaining stock levels efficiently.
+        </p>
       </div>
-      <hr className="border-red-800 mb-4" />
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name" className="font-semibold text-gray-700">
-          Name:
-        </label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Enter your Name"
-          required
-          className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
-        />
-        <label htmlFor="description" className="font-semibold text-gray-700">
-          Describtion
-        </label>
-        <input
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          placeholder="Descripte the type of the category"
-          className="w-full font-normal px-4 py-2 border border-gray-700 rounded-2xl "
-        />
-        <button
-          onClick={() => navigate("/Dashboard")}
-          type="submit"
-          disabled={loading}
-          className={`text-center text-white text-xl py-2 mt-6 w-full rounded-2xl bg-blue-500 
-            ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-600"}`}
-        >
-          Add Category
-        </button>
-      </form>
     </div>
   );
 };

@@ -1,13 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useUserContext } from "../User/userContext.jsx"; 
-import { FaHome, FaUserPlus, FaMoneyBillWave, FaListAlt ,FaBox} from "react-icons/fa"; // Added more specific icons
+import { FaHome, FaUserPlus, FaMoneyBillWave, FaListAlt ,FaBox, FaChartLine, FaBrain} from "react-icons/fa"; // Added more specific icons
 import { useNavigate } from "react-router-dom"; 
 import {useCategoryContext} from "../Categories/Categories.jsx"
+import {useProductContext} from "../Products/Products.jsx"
+import axios from "axios"
 
 const Dashboard = () => {
   const {categories} = useCategoryContext()
+  const { products } = useProductContext();
   const { users } = useUserContext(); 
   const navigate = useNavigate(); 
+  const [analytics, setAnalytics] = useState({
+    totalProducts: 0,
+    lowStockItems: 0,
+    totalSales: 0,
+    totalCustomers: 0
+  });
+
+  useEffect(() => {
+    fetchDashboardAnalytics();
+  }, []);
+
+  const fetchDashboardAnalytics = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/analytics/inventory");
+      setAnalytics({
+        totalProducts: response.data.inventoryAnalytics.totalProducts || 0,
+        lowStockItems: response.data.inventoryAnalytics.lowStockItems || 0,
+        totalSales: response.data.inventoryAnalytics.totalStockValue || 0,
+        totalCustomers: users.length
+      });
+    } catch (error) {
+      console.error("Error fetching dashboard analytics:", error);
+    }
+  };
 
   const StatCard = ({ title, value, color, icon: Icon, actionText, onAction }) => (
     <div className="flex flex-col items-center ">
@@ -53,47 +80,51 @@ const Dashboard = () => {
         {/* Active Projects (Static Data for example) */}
         <StatCard 
           title="Products" 
-          value="18" 
+          value={analytics.totalProducts} 
           color="red" 
           icon={FaBox} 
           actionText="view Products"
           onAction={() => navigate('/products')}
         />
 
-        {/* Revenue (Static Data for example) */}
+        {/* Revenue (Real Data) */}
+        <StatCard 
+          title="Total Stock Value" 
+          value={`$${analytics.totalSales.toFixed(0)}`}
+          color="green" 
+          icon={FaMoneyBillWave} 
+          actionText="View Analytics"
+          onAction={() => navigate('/analytics')}
+        />
+
+        {/* Categories */}
         <StatCard 
           title="Total Categories" 
           value={categories.length}
-          color="indigo" // Tailwind uses 'amber' now, but 'yellow' is a common alias/class
-          icon={FaMoneyBillWave} 
+          color="indigo" 
+          icon={FaListAlt} 
           actionText="View Categories"
           onAction={() => navigate('/DisplayCategories')}
         />
 
-        {/* Pending Tasks (Static Data for example) */}
+        {/* Low Stock Alert */}
         <StatCard 
-          title="Pending Tasks" 
-          value="5" 
-          color="red" 
-          icon={FaListAlt} 
-          actionText="Review Tasks"
-          onAction={() => console.log('Navigate to Tasks')}
+          title="Low Stock Items" 
+          value={analytics.lowStockItems} 
+          color="orange" 
+          icon={FaChartLine} 
+          actionText="View Predictions"
+          onAction={() => navigate('/predictions')}
         />
+
+        {/* AI Features */}
         <StatCard 
-          title="Pending Tasks" 
-          value="5" 
-          color="indigo" 
-          icon={FaListAlt} 
-          actionText="Review Tasks"
-          onAction={() => console.log('Navigate to Tasks')}
-        />
-        <StatCard 
-          title="Pending Tasks" 
-          value="5" 
-          color="red" 
-          icon={FaListAlt} 
-          actionText="Review Tasks"
-          onAction={() => console.log('Navigate to Tasks')}
+          title="AI Analytics" 
+          value="NEW" 
+          color="purple" 
+          icon={FaBrain} 
+          actionText="View Analytics"
+          onAction={() => navigate('/analytics')}
         />
 
       </div>

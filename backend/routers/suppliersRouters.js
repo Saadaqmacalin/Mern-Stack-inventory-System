@@ -7,8 +7,13 @@ import {
   UpdateSupplier,
   deleteSupplier,
 } from "../controllers/suppliers.js";
+import validate from "../middlewares/validationMiddleware.js";
+import { supplierSchema } from "../validations/supplierValidation.js";
 
-router.route("/").post(addSuppliers).get(getSuppliers);
+router.route("/")
+  .post(validate(supplierSchema), addSuppliers)
+  .get(getSuppliers);
+
 router
   .route("/:id")
   .get(getSupplierById)

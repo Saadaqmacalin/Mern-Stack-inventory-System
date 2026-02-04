@@ -10,8 +10,7 @@ const categorySchema = new Schema(
     },
     description: {
       type: String,
-      minlength: 15,
-      required: [true, "category description must be provided"],
+      default: "",
     },
   },
   {

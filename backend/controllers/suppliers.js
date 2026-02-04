@@ -2,145 +2,67 @@ import Suppliers from "../Models/suppliers.js";
 import { StatusCodes } from "http-status-codes";
 
 const addSuppliers = async (req, res) => {
-  try {
-    const { companyName, email, phone, address, category, status } = req.body;
-
-    if (
-      !companyName ||
-      !email ||
-      !phone ||
-      !category ||
-      (!status && !address) ||
-      Object.keys(address).length === 0
-    ) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: "All feilds must be provided",
-      });
-    }
-    const supplier = await Suppliers.create(req.body);
-    res.status(StatusCodes.CREATED).json({
-      message: "Supplier added successfully",
-      supplier,
-    });
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: "Email , phone Number or Company Name already exists",
-      });
-    }
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({mess:"Something went wronge while adding suppliers", message: error.message });
-  }
+  // Duplication check (e.g. by email/phone/companyName)
+  // Usually unique index on DB handles this, but meaningful error is good.
+  // Validation layer handles basic required fields.
+  
+  const supplier = await Suppliers.create(req.body);
+  res.status(StatusCodes.CREATED).json({
+    message: "Supplier added successfully",
+    supplier,
+  });
 };
 
 const getSuppliers = async (req, res) => {
-  try {
-    const suppliers = await Suppliers.find({});
-    if (!suppliers || suppliers === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        message: "Not Found a supplier",
-      });
-    }
-    res
-      .status(StatusCodes.OK)
-      .json({ TotalSuppliers: suppliers.length, suppliers });
-  } catch (error) {
-    console.error(`error ocured while getting all the suppliers: ${error}`);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "something went wronge while getting the suppliers",
-      error: error.message,
-    });
-  }
+  const suppliers = await Suppliers.find({});
+  res
+    .status(StatusCodes.OK)
+    .json({ TotalSuppliers: suppliers.length, suppliers });
 };
 
 const getSupplierById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const supplier = await Suppliers.findById(id);
-    if (!supplier) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        message: "Supplier not found",
-      });
-    }
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "here is your supplier", supplier });
-  } catch (error) {
-    console.error(`error ocured while getting a single supplier : ${error}`);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Something went wronge while getting a supplier",
-      error: error.message,
+  const { id } = req.params;
+  const supplier = await Suppliers.findById(id);
+  if (!supplier) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "Supplier not found",
     });
   }
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "Supplier details", supplier });
 };
 
 const UpdateSupplier = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { companyName, email, phone, address, category, status } = req.body;
-    if (
-      !companyName &&
-      !email  &&
-      !phone  &&
-      !category  &&
-      !status  &&
-      !address  &&
-      !Object.keys(address).length == 0
-    ) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "please profide at least one feild to " });
-    }
-    const supplier = await Suppliers.findByIdAndUpdate(
-      id,
-      {
-        companyName,
-        email,
-        phone,
-        address,
-        category,
-        status,
-      },
-      { new: true, runValidators: true }
-    );
-    if (!supplier) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Not Found the supplier you want to update" });
-    }
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "Supplier updated successfully", supplier });
-  } catch (error) {
-    console.error(`error ocured while while updating a supplier`, error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Something went wronge while updatting a supplier",
-      error: error.message,
-    });
+  const { id } = req.params;
+  
+  const supplier = await Suppliers.findByIdAndUpdate(
+    id,
+    req.body,
+    { new: true, runValidators: true }
+  );
+
+  if (!supplier) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ message: "Supplier not found" });
   }
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "Supplier updated successfully", supplier });
 };
 
 const deleteSupplier = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const supplier = await Suppliers.findByIdAndDelete(id);
-    if (!supplier) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        message: "Not Found the supplier you want to delete",
-      });
-    }
-    res
-      .status(StatusCodes.OK)
-      .json({ message: "the supplier has been deleted successfully" });
-  } catch (error) {
-    console.error(`error ocured while deleting a supplier: ${error}`);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR),
-      json({
-        message: "Something went wronge while deleting a supplier",
-        error: error.message,
-      });
+  const { id } = req.params;
+  const supplier = await Suppliers.findByIdAndDelete(id);
+  if (!supplier) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "Supplier not found",
+    });
   }
+  res
+    .status(StatusCodes.OK)
+    .json({ message: "Supplier deleted successfully" });
 };
 
 export {

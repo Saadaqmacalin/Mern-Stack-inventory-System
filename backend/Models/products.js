@@ -27,18 +27,16 @@ const productSchema = new Schema(
     price: {
       type: Number,
       required: true,
-      validate: {
-        validator: function (value) {
-          return value > this.costPrice;
-        },
-        message: "price must be greater than cost price",
-      },
     },
 
     costPrice: {
       type: Number,
       required: true,
       min: [0.01, "the price must be greaterthan zero "],
+    },
+    quantity: {
+      type: Number,
+      default: 0,
     },
     status: {
       type: String,

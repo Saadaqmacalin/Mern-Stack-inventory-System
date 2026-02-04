@@ -1,5 +1,6 @@
-import React from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import React, { useMemo } from "react";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
+import { useAppContext } from "../../contexts/AppContext";
 import {
   FaUsers,
   FaHome,
@@ -8,229 +9,123 @@ import {
   FaChartBar,
   FaUser,
   FaQuestionCircle,
+  FaTruck,
+  FaTags,
+  FaMoneyBillWave,
+  FaClipboardList
 } from "react-icons/fa";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const logeduser = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
+  const { sidebarOpen, actions, user } = useAppContext();
 
-  const clearLocalStorage = () => {
-    localStorage.clear();
-    navigate("/"); // redirect to login/home
+  const handleLogout = () => {
+    actions.logout();
+    navigate("/login");
   };
 
+  const menuItems = useMemo(() => [
+    { path: "/dashboard", label: "Dashboard", icon: FaHome },
+    { path: "/products", label: "Products", icon: FaBox },
+    { path: "/categories", label: "Categories", icon: FaTags }, // Changed path from /DisplayCategories
+    { path: "/customers", label: "Customers", icon: FaUsers },
+    { path: "/suppliers", label: "Suppliers", icon: FaTruck },
+    { path: "/sales", label: "Sales", icon: FaMoneyBillWave },
+    { path: "/purchases", label: "Purchases", icon: FaClipboardList },
+    { path: "/orders", label: "Orders", icon: FaShoppingCart },
+    { path: "/reports", label: "Reports", icon: FaChartBar },
+  ], []);
+
+  const bottomItems = useMemo(() => [
+    { path: "/profile", label: "Profile", icon: FaUser },
+    { path: "/help", label: "Help", icon: FaQuestionCircle },
+  ], []);
+
+  const NavItem = ({ item }) => (
+    <NavLink
+      to={item.path}
+      className={({ isActive }) =>
+        `flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+          isActive
+            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+        }`
+      }
+    >
+      <item.icon className={`text-lg transition-transform group-hover:scale-110`} />
+      <span className="font-medium">{item.label}</span>
+    </NavLink>
+  );
+
   return (
-    <div className="w-60 h-screen bg-gray-800 text-white p-4 fixed top-0 left-0 flex flex-col z-10">
+    <aside
+      className={`fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out z-30 
+        ${sidebarOpen ? "w-72 translate-x-0" : "w-0 -translate-x-full lg:w-72 lg:translate-x-0"}
+      `}
+    >
+      <div className="flex flex-col h-full bg-gray-900 border-r border-gray-800 shadow-2xl">
+        {/* Sidebar Header */}
+        <div className="p-6 border-b border-gray-800">
+           <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
+                <FaBox className="text-white text-xl" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                  Inventory
+                </h1>
+                <p className="text-xs text-gray-500">Management System</p>
+              </div>
+           </div>
+        </div>
 
-      {/* Sidebar Header */}
-      <div className="">
-        <h2 className="text-xl font-bold mb-6 text-indigo-400">
-          Admin Dashboard
-        </h2>
-        <hr className="text-gray-500" />
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="flex flex-col gap-2 mt-6  overflow-y-auto">
-
-        <NavLink
-          to="/Dashboard"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaHome size={20} className="text-gray-400" />
-            <span>Dashboard</span>
+        {/* Navigation Links */}
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+          <div className="mb-6">
+            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              Main Menu
+            </h3>
+            <div className="space-y-1">
+              {menuItems.map((item) => (
+                <NavItem key={item.path} item={item} />
+              ))}
+            </div>
           </div>
-        </NavLink>
 
-        <NavLink
-          to="/users"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex items-center gap-2">
-            <FaUsers size={20} className="text-gray-400" />
-            <h6>Users</h6>
+          <div>
+             <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+              Settings
+            </h3>
+             <div className="space-y-1">
+              {bottomItems.map((item) => (
+                <NavItem key={item.path} item={item} />
+              ))}
+             </div>
           </div>
-        </NavLink>
+        </nav>
 
-        <NavLink
-          to="/products"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Products</span>
+        {/* User Info and Logout */}
+        <div className="p-4 border-t border-gray-800 bg-gray-900/50">
+          <div className="flex items-center p-3 rounded-xl bg-gray-800/50 mb-3 border border-gray-700/50">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg">
+              {user?.name?.charAt(0) || "U"}
+            </div>
+            <div className="ml-3 overflow-hidden">
+               <p className="text-sm font-medium text-white truncate">{user?.name || "User"}</p>
+               <p className="text-xs text-gray-400 truncate">{user?.email || "user@example.com"}</p>
+            </div>
           </div>
-        </NavLink>
-
-        <NavLink
-          to="/DisplayCategories"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Categories</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/suppliers"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Suppliers</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/customers"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Customers</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/puchase"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Purchases</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/sales"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaBox size={20} className="text-gray-400" />
-            <span>Sales</span>
-          </div>
-        </NavLink>
-
-        <hr className="text-gray-500" />
-        <h6 className="text-gray-400 font-extralight">MANAGEMENT</h6>
-
-        <NavLink
-          to="/orders"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaShoppingCart size={20} className="text-gray-400" />
-            <span>Orders</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/reports"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaChartBar size={20} className="text-gray-400" />
-            <span>Report</span>
-          </div>
-        </NavLink>
-
-        <hr className="text-gray-500" />
-        <h6 className="text-gray-400 font-extralight">SETTINGS</h6>
-
-        <NavLink
-          to="/profile"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaUser size={20} className="text-gray-400" />
-            <span>Profile</span>
-          </div>
-        </NavLink>
-
-        <NavLink
-          to="/help"
-          className={({ isActive }) =>
-            isActive
-              ? "bg-indigo-600 p-2 rounded text-white"
-              : "hover:bg-gray-700 p-2 rounded"
-          }
-        >
-          <div className="flex space-x-2">
-            <FaQuestionCircle size={20} className="text-gray-400" />
-            <span>Help</span>
-          </div>
-        </NavLink>
-        
-      </nav>
-
-      {/* User Info and Logout */}
-      <div className=" mt-auto pt-4 border-t border-gray-700">
-        <div className="text-lg">
-          {logeduser ? (
-            logeduser.status === "ADMIN" ? (
-              <h4>{logeduser.name} Logged as Admin</h4>
-            ) : (
-              <h4>{logeduser.name} Logged as User</h4>
-            )
-          ) : (
-            <h4 className="text-gray-400 font-medium">No user logged in</h4>
-          )}
-
+          
           <button
-            onClick={clearLocalStorage}
-            className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center space-x-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white py-2.5 px-4 rounded-xl transition-all duration-200 border border-red-500/20 hover:border-red-500"
           >
-            Logout
+            <span>Logout</span>
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

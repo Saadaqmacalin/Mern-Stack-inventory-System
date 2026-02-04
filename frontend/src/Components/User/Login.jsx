@@ -1,27 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Mail, Lock } from "lucide-react";
 
 const API_URL = "http://localhost:5000/api/users/login";
 
-
 const Login = () => {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [user, setUser] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // input changes
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate before sending
     if (!user.email || !user.password) {
       alert("Please fill in both email and password.");
       return;
@@ -29,104 +23,89 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post(
-        API_URL,
-        {
-          email: user.email,
-          password: user.password,
-        },
-        { withCredentials: true }
-      );
-
-      // if (
-      //   res.data.user.email !== user.email ||
-      //   res.data.user.password !== user.password
-      // ) {
-      //   alert("email or password are incorret");
-      //   return
-      // }
+      const res = await axios.post(API_URL, user, { withCredentials: true });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert(res.data.message || "Login successful!");
-      // alert(`Welcome back, ${user.name || "User"}!`);
       navigate("/Dashboard");
     } catch (err) {
-      if (err.response) {
-        const { status, data } = err.response;
-        if (status === 400) {
-          alert("Email and password are required.");
-        } else if (status === 401) {
-          alert(data.message || "Invalid email or password.");
-        } else {
-          alert(data.message || "Something went wrong.");
-        }
-      } else {
-        alert("Network error. Please try again later.");
-      }
+      alert(err.response?.data?.message || "Login failed.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white w-full max-w-md mx-auto p-6 rounded-4xl shadow-2xl mt-20">
-      <h2 className="text-xl font-bold text-blue-600 text-center mb-4">
-        Login
-      </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 px-4">
+      <div className="w-full max-w-md backdrop-blur-xl bg-white/90 shadow-2xl rounded-3xl p-8">
+        
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Welcome Back 👋
+        </h2>
+        <p className="text-center text-gray-500 mb-6">
+          Login to continue to your dashboard
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="email" className="font-medium text-gray-700">
-            Email:
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            required
-            className="w-full font-light px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          
+          {/* Email */}
+          <div>
+            <label className="text-sm font-medium text-gray-600">Email</label>
+            <div className="flex items-center border rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-blue-500">
+              <Mail className="text-gray-400 w-5 h-5 mr-2" />
+              <input
+                type="email"
+                name="email"
+                value={user.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                className="w-full outline-none bg-transparent"
+              />
+            </div>
+          </div>
 
-        <div className="mb-4">
-          <label htmlFor="password" className="font-medium text-gray-700">
-            Password:
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            required
-            className="w-full font-light px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
-        </div>
+          {/* Password */}
+          <div>
+            <label className="text-sm font-medium text-gray-600">Password</label>
+            <div className="flex items-center border rounded-xl px-3 py-2 mt-1 focus-within:ring-2 focus-within:ring-blue-500">
+              <Lock className="text-gray-400 w-5 h-5 mr-2" />
+              <input
+                type="password"
+                name="password"
+                value={user.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className="w-full outline-none bg-transparent"
+              />
+            </div>
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={`text-center text-xl py-2 w-full rounded-2xl text-white ${
-            loading ? "bg-gray-400" : "bg-blue-500 hover:bg-indigo-400"
-          }`}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          {/* Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-xl text-white font-semibold transition duration-300 shadow-lg 
+            ${loading 
+              ? "bg-gray-400 cursor-not-allowed" 
+              : "bg-blue-600 hover:bg-indigo-600 hover:scale-[1.02]"}`}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-      <p className="text-sm text-gray-600 text-center mt-4">
-        Forgot Password{" "}
-        <span
-          onClick={() => navigate("/resetpassword")}
-          className="text-blue-600 cursor-pointer hover:underline"
-        >
-          Reset here
-        </span>
-      </p>
+        {/* Reset */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Forgot password?{" "}
+          <span
+            onClick={() => navigate("/resetpassword")}
+            className="text-blue-600 font-medium cursor-pointer hover:underline"
+          >
+            Reset here
+          </span>
+        </p>
+      </div>
     </div>
   );
 };
