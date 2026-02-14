@@ -16,11 +16,10 @@ import suppliersRouters from "./routers/suppliersRouters.js";
 import customerRouter from "./routers/customerRouter.js";
 import purchaseRouter from "./routers/purchaseRouter.js";
 import saleRouter from "./routers/saleRouter.js";
-import analyticsRouter from "./routers/analyticsRouter.js";
-import predictionsRouter from "./routers/predictionsRouter.js";
 import orderRouter from "./routers/orderRouter.js";
 import reportsRouter from "./routers/reportsRouter.js";
 import customerPortalRouter from "./routers/customerRouters.js";
+import importRouter from "./routers/importRouter.js";
 import connectDB from "./db/connectDB.js";
 
 // Middleware configuration
@@ -42,11 +41,10 @@ app.use("/api/suppliers", suppliersRouters);
 app.use("/api/customers", customerRouter);
 app.use("/api/purchases", purchaseRouter);
 app.use("/api/sales", saleRouter);
-app.use("/api/analytics", analyticsRouter);
-app.use("/api/predictions", predictionsRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/reports", reportsRouter);
 app.use("/api/customer-portal", customerPortalRouter);
+app.use("/api/import", importRouter);
 
 // Error Handling Middlewares (Must be after routes)
 app.use(notFoundMiddleware);

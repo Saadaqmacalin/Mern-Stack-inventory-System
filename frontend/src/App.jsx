@@ -3,19 +3,21 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AppProvider } from './contexts/AppContext';
 import Layout from './Components/layout/Layout';
 import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Customers from './pages/Customers';
 import Suppliers from './pages/Suppliers';
 import Sales from './pages/Sales';
 import Orders from './pages/Orders';
-import Analytics from './pages/Analytics';
-import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
+import Users from './pages/Users';
 import Purchases from './pages/Purchases';
 import Categories from './pages/Categories';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+import DataImport from './pages/DataImport';
+import AddUser from './Components/Users/AddUser';
 import { ProtectedRoute, PublicRoute } from './Components/auth/ProtectedRoute';
 
 // Customer Portal Imports
@@ -40,6 +42,14 @@ function App() {
               </PublicRoute>
             }
           />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
           
           {/* Protected Routes */}
           <Route
@@ -55,15 +65,16 @@ function App() {
             <Route path="products/*" element={<Products />} />
             <Route path="customers/*" element={<Customers />} />
             <Route path="suppliers/*" element={<Suppliers />} />
+            <Route path="categories/*" element={<Categories />} />
             <Route path="sales/*" element={<Sales />} />
             <Route path="orders/*" element={<Orders />} />
-            <Route path="purchases/*" element={<Purchases />} />
-            <Route path="categories/*" element={<Categories />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="predictions" element={<Predictions />} />
             <Route path="reports" element={<Reports />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="users" element={<Users />} />
+            <Route path="users/add" element={<AddUser />} />
+            <Route path="purchases/*" element={<Purchases />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="import" element={<DataImport />} />
           </Route>
           
           {/* Customer Portal Routes */}

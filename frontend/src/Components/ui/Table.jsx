@@ -44,9 +44,9 @@ const Table = ({
     if (children) return children;
 
     return data.map((row, rowIndex) => (
-      <tr key={row._id || rowIndex} className="hover:bg-gray-50/50 transition-colors border-b border-gray-100 last:border-0">
+      <tr key={row._id || rowIndex} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0">
         {columns.map((col, colIndex) => (
-          <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+          <td key={colIndex} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
             {col.render ? col.render(row[col.key], row) : row[col.key]}
           </td>
         ))}
@@ -55,22 +55,22 @@ const Table = ({
   };
 
   return (
-    <div className={`overflow-x-auto rounded-xl border border-gray-100 ${className}`}>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50/80 backdrop-blur-sm sticky top-0">
+    <div className={`overflow-x-auto rounded-xl border border-gray-100 dark:border-gray-700 ${className}`}>
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead className="bg-gray-50/80 dark:bg-gray-800/80 backdrop-blur-sm sticky top-0">
           <tr>
             {columnHeaders.map((header, index) => (
               <th
                 key={index}
                 scope="col"
-                className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap"
+                className="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap"
               >
                 {header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
           {renderContent()}
         </tbody>
       </table>
@@ -81,14 +81,14 @@ const Table = ({
 const TRow = ({ children, onClick, className = '' }) => (
   <tr 
     onClick={onClick} 
-    className={`hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0 ${onClick ? 'cursor-pointer' : ''} ${className}`}
+    className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0 ${onClick ? 'cursor-pointer' : ''} ${className}`}
   >
     {children}
   </tr>
 );
 
 const TCell = ({ children, className = '' }) => (
-  <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium ${className}`}>
+  <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 font-medium ${className}`}>
     {children}
   </td>
 );

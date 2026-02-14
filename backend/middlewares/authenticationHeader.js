@@ -16,7 +16,7 @@ const authenticationHeader = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Attach user data to the request object
-    req.user = { userId: decoded.userId, name: decoded.name };
+    req.user = { userId: decoded.userId, name: decoded.name, status: decoded.status };
     
     next();
   } catch (error) {

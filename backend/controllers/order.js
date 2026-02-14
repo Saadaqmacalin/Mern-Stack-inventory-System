@@ -100,7 +100,7 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const { status, page = 1, limit = 10 } = req.query;
+    const { status } = req.query;
     
     const filter = {};
     if (status) {
@@ -110,16 +110,12 @@ const getOrders = async (req, res) => {
     const orders = await Order.find(filter)
       .populate("customerId", "name email phone")
       .populate("items.productId", "productName")
-      .sort({ createdAt: -1 })
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
+      .sort({ createdAt: -1 });
 
     const total = await Order.countDocuments(filter);
 
     res.status(StatusCodes.OK).json({
       orders,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
       total,
     });
   } catch (error) {

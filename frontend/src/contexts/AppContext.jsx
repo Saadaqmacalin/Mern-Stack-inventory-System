@@ -6,6 +6,7 @@ const initialState = {
   // User state
   user: JSON.parse(localStorage.getItem('user')) || null,
   isAuthenticated: !!localStorage.getItem('token'),
+  users: [],
   
   // Data state
   products: [],
@@ -28,14 +29,6 @@ const initialState = {
   
   // Notifications
   notifications: [],
-  
-  // Analytics data
-  analytics: {
-    salesData: [],
-    inventoryData: {},
-    customerData: [],
-    financialData: {},
-  },
 };
 
 // Action types
@@ -105,9 +98,12 @@ export const ACTIONS = {
   ADD_NOTIFICATION: 'ADD_NOTIFICATION',
   REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
   
-  // Analytics
-  SET_ANALYTICS: 'SET_ANALYTICS',
-  
+  // User Actions
+  SET_USERS: 'SET_USERS',
+  ADD_USER: 'ADD_USER',
+  UPDATE_USER: 'UPDATE_USER',
+  DELETE_USER: 'DELETE_USER',
+
   // Theme
   SET_THEME: 'SET_THEME',
 };
@@ -136,6 +132,30 @@ const appReducer = (state, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+
+    case ACTIONS.SET_USERS:
+      return {
+        ...state,
+        users: action.payload,
+      };
+
+    case ACTIONS.ADD_USER:
+      return {
+        ...state,
+        users: [...state.users, action.payload],
+      };
+
+    case ACTIONS.UPDATE_USER:
+      return {
+        ...state,
+        users: state.users.map(u => u._id === action.payload.id ? action.payload.data : u),
+      };
+
+    case ACTIONS.DELETE_USER:
+      return {
+        ...state,
+        users: state.users.filter(u => u._id !== action.payload),
       };
     
     // Data
@@ -277,10 +297,9 @@ const appReducer = (state, action) => {
       };
 
     case ACTIONS.DELETE_SUPPLIER:
-      return {
-        ...state,
-        suppliers: state.suppliers.filter(supplier => supplier._id !== action.payload),
-      };
+
+
+  // Persist state
 
     // Sales CRUD
     case ACTIONS.ADD_SALE:
@@ -404,9 +423,34 @@ const AppContext = createContext();
 // Provider component
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [isReady, setIsReady] = React.useState(false);
   
   // API base URL
   const API_BASE_URL = 'http://localhost:5000/api';
+
+  // Axios Interceptor
+  useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+    
+    // Mark as ready after setting up interceptors
+    setIsReady(true);
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+    };
+  }, []);
+
   
   // Action creators
   const actions = {
@@ -436,6 +480,35 @@ export const AppProvider = ({ children }) => {
       }
     },
     
+    register: async (userData) => {
+      try {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
+        const response = await axios.post(`${API_BASE_URL}/users`, userData);
+        // Backend returns: { message: "User created successfully", token: "..." }
+        const { token } = response.data;
+        
+        // Auto-login after registration
+        const user = { ...userData, token, role: 'USER' }; // Basic user object until we fetch full profile
+        
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        
+        dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: { user, token } });
+        dispatch({ type: ACTIONS.ADD_NOTIFICATION, payload: {
+          id: Date.now(),
+          type: 'success',
+          message: 'Registration successful! Welcome aboard.',
+        }});
+        
+        return { success: true };
+      } catch (error) {
+        dispatch({ type: ACTIONS.SET_ERROR, payload: error.response?.data?.message || 'Registration failed' });
+        return { success: false, error: error.response?.data?.message || 'Registration failed' };
+      } finally {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+      }
+    },
+
     logout: () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -801,6 +874,63 @@ export const AppProvider = ({ children }) => {
       }
     },
     
+    // User Management CRUD
+    fetchUsers: async () => {
+      try {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
+        const response = await axios.get(`${API_BASE_URL}/users`);
+        dispatch({ type: ACTIONS.SET_USERS, payload: response.data.users || [] });
+      } catch (error) {
+        dispatch({ type: ACTIONS.SET_ERROR, payload: 'Failed to fetch users' });
+      } finally {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+      }
+    },
+
+    addUser: async (userData) => {
+      try {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
+        await axios.post(`${API_BASE_URL}/users`, userData);
+        // Refresh users list after addition
+        const response = await axios.get(`${API_BASE_URL}/users`);
+        dispatch({ type: ACTIONS.SET_USERS, payload: response.data.users || [] });
+        return { success: true };
+      } catch (error) {
+        dispatch({ type: ACTIONS.SET_ERROR, payload: error.response?.data?.message || 'Failed to add user' });
+        return { success: false, error: error.response?.data?.message || 'Failed to add user' };
+      } finally {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+      }
+    },
+
+    updateUser: async (id, userData) => {
+      try {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
+        const response = await axios.patch(`${API_BASE_URL}/users/${id}`, userData);
+        dispatch({ type: ACTIONS.UPDATE_USER, payload: { id, data: response.data.user } });
+        return { success: true };
+      } catch (error) {
+        dispatch({ type: ACTIONS.SET_ERROR, payload: error.response?.data?.message || 'Failed to update user' });
+        return { success: false, error: error.response?.data?.message || 'Failed to update user' };
+      } finally {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+      }
+    },
+
+    deleteUser: async (id) => {
+      try {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
+        await axios.delete(`${API_BASE_URL}/users/${id}`);
+        dispatch({ type: ACTIONS.DELETE_USER, payload: id });
+        return { success: true };
+      } catch (error) {
+        dispatch({ type: ACTIONS.SET_ERROR, payload: error.response?.data?.message || 'Failed to delete user' });
+        return { success: false, error: error.response?.data?.message || 'Failed to delete user' };
+      } finally {
+        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
+      }
+    },
+    
     // Order CRUD
     addOrder: async (orderData) => {
       try {
@@ -871,54 +1001,6 @@ export const AppProvider = ({ children }) => {
       dispatch({ type: ACTIONS.CLEAR_ERROR });
     },
     
-    // Analytics actions
-    fetchAnalytics: async (period = 'daily') => {
-      try {
-        dispatch({ type: ACTIONS.SET_LOADING, payload: true });
-        const [salesRes, inventoryRes, customerRes, productsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/analytics/sales?period=${period}`),
-          axios.get(`${API_BASE_URL}/analytics/inventory`),
-          axios.get(`${API_BASE_URL}/analytics/customers`),
-          axios.get(`${API_BASE_URL}/analytics/top-products`)
-        ]);
-
-        const analyticsData = {
-          salesData: salesRes.data.salesAnalytics || [],
-          inventoryData: inventoryRes.data.inventoryAnalytics || {},
-          customerData: customerRes.data.customerAnalytics || [],
-          topProducts: productsRes.data.topProducts || []
-        };
-
-        dispatch({ type: ACTIONS.SET_ANALYTICS, payload: analyticsData });
-        return { success: true, data: analyticsData };
-      } catch (error) {
-        dispatch({ type: ACTIONS.SET_ERROR, payload: 'Failed to fetch analytics data' });
-        return { success: false, error: 'Failed to fetch analytics data' };
-      } finally {
-        dispatch({ type: ACTIONS.SET_LOADING, payload: false });
-      }
-    },
-
-    fetchDemandForecast: async (productId) => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/predictions/demand-forecast`, { params: { productId } });
-        return { success: true, data: response.data };
-      } catch (error) {
-        console.error('Forecast error:', error);
-        return { success: false, error: 'Failed to fetch forecast' };
-      }
-    },
-
-    fetchInventoryOptimization: async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/predictions/inventory-optimization`);
-        return { success: true, data: response.data };
-      } catch (error) {
-        console.error('Optimization error:', error);
-        return { success: false, error: 'Failed to fetch optimization' };
-      }
-    },
-
     // Notification actions
     addNotification: (notification) => {
       dispatch({ type: ACTIONS.ADD_NOTIFICATION, payload: {
@@ -969,8 +1051,15 @@ export const AppProvider = ({ children }) => {
     ...state,
     actions,
     dispatch,
+    API_BASE_URL,
   };
   
+  if (!isReady) {
+    return <div className={`fixed inset-0 z-50 flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-opacity duration-300`}>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600"></div>
+    </div>;
+  }
+
   return (
     <AppContext.Provider value={value}>
       {children}

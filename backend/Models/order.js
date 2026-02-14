@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const orderSchema = new Schema(
+const orderSchema = new Schema( 
   {
     orderNumber: {
       type: String,

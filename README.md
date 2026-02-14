@@ -2,7 +2,7 @@
 
 A comprehensive MERN stack inventory management system with advanced analytics and AI-powered predictions for demand forecasting and inventory optimization.
 
-## 🚀 Features
+##  Features
 
 ### Core Inventory Management
 - **Product Management**: Add, edit, delete, and track products with categories and suppliers
@@ -12,15 +12,9 @@ A comprehensive MERN stack inventory management system with advanced analytics a
 - **Purchase Management**: Purchase order tracking with stock updates
 - **User Management**: Role-based user authentication and authorization
 
-### 🤖 AI & Analytics Features
-- **Sales Analytics**: Real-time sales trends, revenue analysis, and performance metrics
-- **Demand Forecasting**: ML-powered demand prediction for individual products
-- **Inventory Optimization**: Smart recommendations for stock levels and reordering
-- **Sales Prediction**: Advanced sales forecasting with confidence intervals
-- **Customer Analytics**: Customer behavior analysis and purchasing patterns
-- **Profit Analytics**: Real-time profit margin tracking and analysis
 
-### 📊 Dashboard & Reporting
+
+###  Dashboard & Reporting
 - **Real-time Dashboard**: Live inventory metrics and KPIs
 - **Interactive Reports**: Comprehensive analytics and reporting interface
 - **Low Stock Alerts**: Automated notifications for inventory optimization
@@ -43,13 +37,9 @@ A comprehensive MERN stack inventory management system with advanced analytics a
 - **Tailwind CSS** for styling
 - **React Icons** for UI components
 
-### ML & Analytics
-- **MongoDB Aggregation Pipeline** for data analytics
-- **Custom prediction algorithms** for forecasting
-- **Statistical analysis** for demand prediction
-- **Trend analysis** for sales forecasting
 
-## 📦 Installation
+
+##  Installation
 
 ### Prerequisites
 - Node.js (v16 or higher)
@@ -75,7 +65,7 @@ cd frontend
 npm install
 ```
 
-## 🚀 Running the Application
+##  Running the Application
 
 ### Start Backend Server
 ```bash
@@ -91,7 +81,7 @@ npm run dev
 ```
 The frontend will run on `http://localhost:5173` (or next available port)
 
-## 🔗 API Endpoints
+##  API Endpoints
 
 ### Authentication
 - `POST /api/users/register` - User registration
@@ -126,35 +116,11 @@ The frontend will run on `http://localhost:5173` (or next available port)
 - `GET /api/analytics/suppliers` - Supplier analytics
 - `GET /api/analytics/profit` - Profit analytics
 
-### Predictions
-- `GET /api/predictions/demand-forecast` - Demand forecasting
-- `GET /api/predictions/inventory-optimization` - Inventory optimization
-- `GET /api/predictions/sales-prediction` - Sales prediction
 
-## 🤖 ML Features
 
-### Demand Forecasting
-- Historical sales data analysis
-- Moving average predictions
-- Seasonal trend detection
-- Confidence interval calculations
-- Reorder point recommendations
 
-### Inventory Optimization
-- Low stock item identification
-- Priority-based recommendations
-- Sales velocity analysis
-- Safety stock calculations
-- Automated reorder suggestions
 
-### Sales Prediction
-- Growth rate analysis
-- Trend detection
-- Seasonal factor application
-- Revenue forecasting
-- Order volume predictions
-
-## 📊 Data Models
+##  Data Models
 
 ### Product
 ```javascript
@@ -198,7 +164,7 @@ The frontend will run on `http://localhost:5173` (or next available port)
 }
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### Environment Variables
 - `PORT`: Backend server port (default: 5000)
@@ -210,7 +176,7 @@ The frontend will run on `http://localhost:5173` (or next available port)
 2. Create a database named `inventory_system`
 3. The application will automatically create collections
 
-## 🎯 Usage
+##  Usage
 
 1. **Register/Login**: Create an account or login to existing one
 2. **Dashboard**: View real-time inventory metrics and KPIs
@@ -218,9 +184,9 @@ The frontend will run on `http://localhost:5173` (or next available port)
 4. **Sales Management**: Record sales and track revenue
 5. **Purchase Management**: Manage purchase orders and stock
 6. **Analytics**: View comprehensive reports and insights
-7. **Predictions**: Get AI-powered forecasts and recommendations
 
-## 🔒 Security Features
+
+##  Security Features
 
 - JWT-based authentication
 - Password hashing with bcrypt
@@ -228,7 +194,7 @@ The frontend will run on `http://localhost:5173` (or next available port)
 - Input validation and sanitization
 - Secure API endpoints
 
-## 🚀 Future Enhancements
+##  Future Enhancements
 
 - Real-time notifications
 - Advanced ML models integration
@@ -239,11 +205,11 @@ The frontend will run on `http://localhost:5173` (or next available port)
 - Audit logging
 - Role-based permissions
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License.
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -251,7 +217,7 @@ This project is licensed under the MIT License.
 4. Push to the branch
 5. Create a Pull Request
 
-## 📞 Support
+##  Support
 
 For support and queries, please open an issue in the repository.
 

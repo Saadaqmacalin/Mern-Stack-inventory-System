@@ -77,31 +77,12 @@ const StorefrontLayout = () => {
                                 </Link>
                             )}
 
-                            {/* Mobile Menu Toggle */}
-                            <button 
-                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="md:hidden p-2 text-slate-600 hover:bg-slate-50 rounded-lg"
-                            >
-                                {mobileMenuOpen ? <FaXmark /> : <FaBars />}
-                            </button>
+                            {/* Mobile Menu Toggle removed */}
                         </div>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
-                {mobileMenuOpen && (
-                    <div className="md:hidden bg-white border-t border-slate-50 px-4 py-6 space-y-4 animate-in slide-in-from-top duration-300">
-                        <Link to="/shop" className="block text-lg font-bold text-slate-900" onClick={() => setMobileMenuOpen(false)}>Catalog</Link>
-                        {isCustomerAuthenticated && (
-                            <Link to="/shop/orders" className="block text-lg font-bold text-slate-900" onClick={() => setMobileMenuOpen(false)}>My Orders</Link>
-                        )}
-                        {!isCustomerAuthenticated && (
-                            <Link to="/shop/auth" className="block" onClick={() => setMobileMenuOpen(false)}>
-                                <Button variant="primary" className="w-full">Sign In</Button>
-                            </Link>
-                        )}
-                    </div>
-                )}
+                {/* Mobile Menu removed */}
             </nav>
 
             {/* Main Content */}

@@ -161,13 +161,54 @@ const DisplayOrders = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
         <div>
-          <h1 className="text-2xl font-black text-gray-900">Order Management</h1>
+          <h1 className="text-2xl font-black text-gray-900 tracking-tight">Order Management</h1>
           <p className="text-gray-500 font-medium tracking-tight">Track and manage your customer lifecycle</p>
         </div>
-        <Button onClick={() => navigate("/orders/add")} variant="primary" size="lg">
+        <Button onClick={() => navigate("/orders/add")} variant="primary" size="lg" className="shadow-lg shadow-indigo-100 dark:shadow-none">
           <FaPlus className="mr-2" />
           Create Order
         </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { 
+            label: "Total Orders", 
+            value: orders.length, 
+            icon: FaTruck, 
+            color: "indigo",
+            sub: "All historical records"
+          },
+          { 
+            label: "Pending Orders", 
+            value: orders.filter(o => o.status === "Pending").length, 
+            icon: FaClock, 
+            color: "amber",
+            sub: "Awaiting processing"
+          },
+          { 
+            label: "Delivered", 
+            value: orders.filter(o => o.status === "Delivered").length, 
+            icon: FaCircleCheck, 
+            color: "green",
+            sub: "Successfully finalized"
+          }
+        ].map((stat, i) => (
+          <Card key={i} className="p-6 border-none shadow-sm group hover:scale-[1.02] transition-all duration-300">
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 bg-${stat.color}-50 dark:bg-${stat.color}-900/20 text-${stat.color}-600 dark:text-${stat.color}-400 rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform`}>
+                <stat.icon className="text-xl" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-0.5">{stat.label}</p>
+                <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-black text-gray-900 dark:text-white">{stat.value}</p>
+                    <p className="text-[10px] font-bold text-gray-400 truncate">{stat.sub}</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
 
       <Card>

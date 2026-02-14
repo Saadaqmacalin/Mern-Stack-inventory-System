@@ -49,7 +49,7 @@ function Sidebar() {
         `flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
           isActive
             ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-white"
         }`
       }
     >
@@ -60,19 +60,19 @@ function Sidebar() {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out z-30 
+      className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-all duration-300 ease-in-out z-30 
         ${sidebarOpen ? "w-72 translate-x-0" : "w-0 -translate-x-full lg:w-72 lg:translate-x-0"}
       `}
     >
-      <div className="flex flex-col h-full bg-gray-900 border-r border-gray-800 shadow-2xl">
+      <div className="flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-2xl">
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-800">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-800">
            <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
                 <FaBox className="text-white text-xl" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
                   Inventory
                 </h1>
                 <p className="text-xs text-gray-500">Management System</p>
@@ -106,13 +106,13 @@ function Sidebar() {
         </nav>
 
         {/* User Info and Logout */}
-        <div className="p-4 border-t border-gray-800 bg-gray-900/50">
-          <div className="flex items-center p-3 rounded-xl bg-gray-800/50 mb-3 border border-gray-700/50">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
+          <div className="flex items-center p-3 rounded-xl bg-white dark:bg-gray-800/50 mb-3 border border-gray-200 dark:border-gray-700/50">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-lg">
               {user?.name?.charAt(0) || "U"}
             </div>
             <div className="ml-3 overflow-hidden">
-               <p className="text-sm font-medium text-white truncate">{user?.name || "User"}</p>
+               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user?.name || "User"}</p>
                <p className="text-xs text-gray-400 truncate">{user?.email || "user@example.com"}</p>
             </div>
           </div>

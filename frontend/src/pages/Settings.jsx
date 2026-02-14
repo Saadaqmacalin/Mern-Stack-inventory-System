@@ -13,8 +13,10 @@ import {
   FaLock, 
   FaEnvelopeOpenText,
   FaMoon,
-  FaSun
+  FaSun,
+  FaUsers
 } from 'react-icons/fa6';
+import UsersList from '../Components/Users/UsersList';
 
 const Settings = () => {
   const { user, actions, theme, setTheme } = useAppContext();
@@ -31,6 +33,10 @@ const Settings = () => {
     { id: 'security', name: 'Security', icon: FaShieldHalved, desc: 'Access & safety' },
     { id: 'general', name: 'General', icon: FaGear, desc: 'App configuration' },
   ];
+
+  if (user?.status === 'ADMIN' || user?.role === 'ADMIN') {
+      tabs.push({ id: 'team', name: 'Team Access', icon: FaUsers, desc: 'Manage users' });
+  }
   
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -52,10 +58,10 @@ const Settings = () => {
     <div className="max-w-6xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter">System Configuration</h1>
-          <p className="text-slate-500 font-medium">Manage your instance protocols and account security</p>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">System Configuration</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Manage your instance protocols and account security</p>
         </div>
-        <div className="px-4 py-2 bg-slate-100 rounded-2xl border border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-500">
+        <div className="px-4 py-2 bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
             Last modified: Feb 2026
         </div>
       </div>
@@ -72,15 +78,15 @@ const Settings = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 group ${
                   isActive 
-                    ? 'bg-white shadow-xl shadow-slate-200/50 ring-1 ring-slate-100' 
-                    : 'hover:bg-slate-100/50 text-slate-400'
+                    ? 'bg-white dark:bg-gray-800 shadow-xl shadow-slate-200/50 dark:shadow-none ring-1 ring-slate-100 dark:ring-gray-700' 
+                    : 'hover:bg-slate-100/50 dark:hover:bg-gray-800/50 text-slate-400'
                 }`}
               >
-                <div className={`p-3 rounded-xl transition-colors ${isActive ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-slate-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-600'}`}>
+                <div className={`p-3 rounded-xl transition-colors ${isActive ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100 dark:shadow-none' : 'bg-slate-100 dark:bg-gray-800 text-slate-400 group-hover:bg-white dark:group-hover:bg-gray-700 group-hover:text-indigo-600'}`}>
                   <Icon className="text-lg" />
                 </div>
                 <div className="text-left">
-                  <p className={`text-sm font-black tracking-tight ${isActive ? 'text-slate-900' : 'text-slate-500 group-hover:text-slate-700'}`}>{tab.name}</p>
+                  <p className={`text-sm font-black tracking-tight ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-gray-400 group-hover:text-slate-700 dark:group-hover:text-gray-300'}`}>{tab.name}</p>
                   <p className="text-[10px] font-bold opacity-50 uppercase tracking-tighter">{tab.desc}</p>
                 </div>
               </button>
@@ -96,7 +102,7 @@ const Settings = () => {
                 <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                     <FaEnvelopeOpenText />
                 </div>
-                <h3 className="text-xl font-black text-slate-800 tracking-tight">Identity Information</h3>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Identity Information</h3>
               </div>
 
               <form onSubmit={handleProfileUpdate} className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -124,7 +130,7 @@ const Settings = () => {
                   onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                   placeholder="+1 (555) 000-0000"
                 />
-                <div className="md:col-span-2 flex justify-end pt-4 border-t border-slate-50">
+                <div className="md:col-span-2 flex justify-end pt-4 border-t border-slate-50 dark:border-gray-700/50">
                   <Button type="submit" size="lg" className="px-10 shadow-lg shadow-indigo-100">
                     Propagate Changes
                   </Button>
@@ -139,7 +145,7 @@ const Settings = () => {
                 <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
                     <FaBell />
                 </div>
-                <h3 className="text-xl font-black text-slate-800 tracking-tight">Transmission Protocols</h3>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Transmission Protocols</h3>
               </div>
 
               <div className="space-y-4">
@@ -148,14 +154,14 @@ const Settings = () => {
                     { title: 'Push Notifications', desc: 'Real-time inventory depletion warnings', checked: false },
                     { title: 'SMS Gateway', desc: 'Enterprise security breach emergency multi-cast', checked: false }
                 ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:bg-white hover:shadow-md transition-all group">
+                    <div key={i} className="flex items-center justify-between p-6 bg-slate-50 dark:bg-gray-700/30 rounded-3xl border border-slate-100 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md transition-all group">
                         <div>
-                            <p className="text-sm font-black text-slate-800 tracking-tight">{item.title}</p>
+                            <p className="text-sm font-black text-slate-800 dark:text-white tracking-tight">{item.title}</p>
                             <p className="text-xs text-slate-400 font-medium">{item.desc}</p>
                         </div>
                         <div className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" className="sr-only peer" defaultChecked={item.checked} />
-                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div className="w-11 h-6 bg-slate-200 dark:bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                         </div>
                     </div>
                 ))}
@@ -170,7 +176,7 @@ const Settings = () => {
                         <div className="p-2 bg-rose-50 rounded-lg text-rose-600">
                             <FaLock />
                         </div>
-                        <h3 className="text-xl font-black text-slate-800 tracking-tight">Access Credentials</h3>
+                        <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Access Credentials</h3>
                     </div>
                     <form className="space-y-6">
                         <Input label="Current Vault Passkey" type="password" required />
@@ -206,23 +212,23 @@ const Settings = () => {
                     <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                         <FaPalette />
                     </div>
-                    <h3 className="text-xl font-black text-slate-800 tracking-tight">System Aesthetics</h3>
+                    <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">System Aesthetics</h3>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-6">
                   <button 
                     onClick={() => handleThemeToggle('light')}
-                    className={`p-10 rounded-3xl border-2 transition-all group ${theme === 'light' ? 'border-indigo-600 bg-indigo-50/30 shadow-xl shadow-indigo-100/50' : 'border-slate-100 hover:border-slate-200'}`}
+                    className={`p-10 rounded-3xl border-2 transition-all group ${theme === 'light' ? 'border-indigo-600 bg-indigo-50/30 dark:bg-indigo-900/20 shadow-xl shadow-indigo-100/50 dark:shadow-none' : 'border-slate-100 dark:border-gray-700 hover:border-slate-200 dark:hover:border-gray-600'}`}
                   >
                     <FaSun className={`text-4xl mx-auto mb-4 ${theme === 'light' ? 'text-indigo-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
-                    <p className={`text-sm font-black tracking-tight ${theme === 'light' ? 'text-slate-900' : 'text-slate-400'}`}>Light Protocol</p>
+                    <p className={`text-sm font-black tracking-tight ${theme === 'light' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>Light Protocol</p>
                   </button>
                   <button 
                     onClick={() => handleThemeToggle('dark')}
-                    className={`p-10 rounded-3xl border-2 transition-all group ${theme === 'dark' ? 'border-indigo-600 bg-indigo-50/30' : 'border-slate-100 hover:border-slate-200'}`}
+                    className={`p-10 rounded-3xl border-2 transition-all group ${theme === 'dark' ? 'border-indigo-600 bg-indigo-50/30 dark:bg-indigo-900/20' : 'border-slate-100 dark:border-gray-700 hover:border-slate-200 dark:hover:border-gray-600'}`}
                   >
                     <FaMoon className={`text-4xl mx-auto mb-4 ${theme === 'dark' ? 'text-indigo-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
-                    <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-slate-900' : 'text-slate-400'}`}>Dark Protocol</p>
+                    <p className={`text-sm font-black tracking-tight ${theme === 'dark' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>Dark Protocol</p>
                   </button>
                 </div>
               </Card>
@@ -232,11 +238,11 @@ const Settings = () => {
                     <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
                         <FaGlobe />
                     </div>
-                    <h3 className="text-xl font-black text-slate-800 tracking-tight">Localization</h3>
+                    <h3 className="text-xl font-black text-slate-800 dark:text-white tracking-tight">Localization</h3>
                 </div>
                 <div className="space-y-4">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Primary Interface Language</label>
-                    <select className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-800 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                    <select className="w-full px-6 py-4 bg-slate-50 dark:bg-gray-700/50 border border-slate-100 dark:border-gray-700 rounded-2xl font-bold text-slate-800 dark:text-white appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
                         <option value="en">Global English (United States)</option>
                         <option value="es">Spanish (Castilian)</option>
                         <option value="fr">French (Standard)</option>
@@ -245,6 +251,10 @@ const Settings = () => {
                 </div>
               </Card>
             </div>
+          )}
+
+          {activeTab === 'team' && (
+              <UsersList />
           )}
         </div>
       </div>

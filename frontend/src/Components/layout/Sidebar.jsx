@@ -8,7 +8,6 @@ import {
   FaTruck,
   FaShoppingCart,
   FaChartBar,
-  FaBrain,
   FaFileAlt,
   FaCog,
   FaSignOutAlt,
@@ -21,7 +20,8 @@ import {
   FaHandshake,
   FaClipboardList,
   FaUser,
-  FaLayerGroup
+  FaLayerGroup,
+  FaUpload
 } from 'react-icons/fa';
 
 const Sidebar = () => {
@@ -42,6 +42,13 @@ const Sidebar = () => {
       icon: FaBox,
       permission: 'products',
       description: 'Manage inventory',
+    },
+    {
+      title: 'User Management',
+      path: '/users',
+      icon: FaUsers,
+      permission: 'users',
+      description: 'System access',
     },
     {
       title: 'Categories',
@@ -86,20 +93,6 @@ const Sidebar = () => {
       description: 'Inventory intake',
     },
     {
-      title: 'Analytics',
-      path: '/analytics',
-      icon: FaChartLine,
-      permission: 'analytics',
-      description: 'Reports and insights',
-    },
-    {
-      title: 'Predictions',
-      path: '/predictions',
-      icon: FaBrain,
-      permission: 'predictions',
-      description: 'AI predictions',
-    },
-    {
       title: 'Reports',
       path: '/reports',
       icon: FaFileAlt,
@@ -122,17 +115,12 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
+      {/* Mobile backdrop removed */}
       
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-2xl transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         <div className="flex flex-col h-full">
@@ -147,12 +135,7 @@ const Sidebar = () => {
                 <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Management System</p>
               </div>
             </div>
-            <button
-              onClick={toggleSidebar}
-              className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            >
-              <FaTimes className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            </button>
+      {/* Mobile close button removed */}
           </div>
           
           {/* User Profile */}
@@ -170,7 +153,12 @@ const Sidebar = () => {
           
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {menuItems.map((item) => {
+            {menuItems.filter(item => {
+                if (user?.status === 'ADMIN' || user?.role === 'ADMIN') return true;
+                // List of items allowed for standard users
+                const allowedForUser = ['/dashboard', '/products', '/sales', '/orders', '/customers', '/suppliers', '/purchases', '/categories', '/users', '/profile', '/settings', '/reports', '/import'];
+                return allowedForUser.includes(item.path);
+            }).map((item) => {
               const active = isActive(item.path);
               return (
                 <NavLink

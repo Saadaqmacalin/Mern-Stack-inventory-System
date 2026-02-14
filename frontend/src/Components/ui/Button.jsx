@@ -8,6 +8,7 @@ const Button = ({
   isLoading = false,
   loading, // Accept loading prop but don't pass it to DOM
   disabled = false,
+  fullWidth = false,
   type = 'button',
   onClick,
   ...props 
@@ -35,7 +36,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`}
       disabled={disabled || showLoading}
       onClick={onClick}
       {...props}

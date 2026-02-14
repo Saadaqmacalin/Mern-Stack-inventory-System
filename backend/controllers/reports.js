@@ -110,6 +110,7 @@ const generateSalesReport = async (req, res) => {
 
     const reportData = {
       summary: salesData[0] || {},
+      details: salesByProduct,
       salesByProduct,
       salesByCustomer,
       reportType: "Sales",
@@ -213,6 +214,7 @@ const generateInventoryReport = async (req, res) => {
 
     const reportData = {
       summary: inventoryData[0] || {},
+      details: lowStockProducts,
       stockByCategory,
       lowStockProducts,
       reportType: "Inventory",
@@ -338,6 +340,7 @@ const generateFinancialReport = async (req, res) => {
         totalPurchases: purchaseData[0]?.totalPurchases || 0,
         netProfit: (salesData[0]?.totalProfit || 0) - (purchaseData[0]?.totalPurchases || 0)
       },
+      details: profitByProduct,
       profitByProduct,
       reportType: "Financial",
       generatedAt: new Date(),
@@ -428,6 +431,7 @@ const generateCustomerReport = async (req, res) => {
 
     const reportData = {
       summary: customerStats[0] || {},
+      details: topCustomers,
       topCustomers,
       customerAcquisition,
       reportType: "Customer",
@@ -496,8 +500,18 @@ const generateOrderReport = async (req, res) => {
       { $sort: { totalValue: -1 } }
     ]);
 
+    const orders = await Order.find(matchCondition).sort({ orderDate: -1 }).limit(50);
+
     const reportData = {
       summary: orderSummary[0] || {},
+      details: orders.map(o => ({
+        orderId: o._id,
+        date: o.orderDate,
+        supplier: o.supplierName || 'N/A',
+        total: o.totalAmount,
+        status: o.status,
+        payment: o.paymentMethod
+      })),
       orderStats,
       ordersByPaymentMethod,
       reportType: "Order",

@@ -4,13 +4,13 @@ import Users from "../Models/user.js";
 // 1. REGISTER USER
 const registerUser = async (req, res) => {
   try {
-    const { name, email, Status, password } = req.body || {};
+    const { name, email, status, password } = req.body || {};
     
     // Check all fields
-    if (!name || !email || !Status || !password) {
+    if (!name || !email || !status || !password) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Name, email, status, and password must be provided" });
+        .json({ message: "Name, email, status (ADMIN/USER), and password must be provided" });
     }
 
     const exists = await Users.findOne({ email });
@@ -21,7 +21,8 @@ const registerUser = async (req, res) => {
     }
 
     // Password auto-hashing should be handled in your User Schema Middleware
-    const user = await Users.create({ ...req.body });
+    // Ensure we pass lowercase 'status' to model
+    const user = await Users.create({ name, email, status, password });
     const token = user.createJWT(); // Call on instance, usually not awaited unless it's a custom async function
 
     res.status(StatusCodes.CREATED).json({ message: "User created successfully", token });
@@ -78,9 +79,9 @@ const getSingleUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, password, Status } = req.body;
+    const { name, email, password, status } = req.body;
 
-    if (!name && !email && !password && !Status) {
+    if (!name && !email && !password && !status) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ message: "Please provide at least one field to update" });
@@ -89,7 +90,7 @@ const updateUser = async (req, res) => {
     // FIXED: Must call findByIdAndUpdate on 'Users'
     const user = await Users.findByIdAndUpdate(
       id,
-      { name, email, password, Status },
+      { name, email, password, status },
       { new: true, runValidators: true }
     ).select("-password");
 
@@ -161,7 +162,7 @@ const login = async (req, res) => {
       user: {
         name: user.name,
         email: user.email,
-        status: user.Status, // Matches your schema field name
+        status: user.status, // Matches your schema field name
         id: user._id,
       },
       token,

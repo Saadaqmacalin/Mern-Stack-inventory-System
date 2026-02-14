@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../../contexts/AppContext';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaWarehouse, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import Button from '../../Components/ui/Button';
@@ -8,7 +8,7 @@ import Card from '../../Components/ui/Card';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, loading, error } = useAppContext();
+  const { actions, loading, error } = useAppContext();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -50,7 +50,7 @@ const Login = () => {
     }
 
     try {
-      const result = await login(formData);
+      const result = await actions.login(formData);
       if (result.success) {
         setSuccessMessage('Login successful! Redirecting...');
         setTimeout(() => {
@@ -181,15 +181,12 @@ const Login = () => {
           </form>
 
           {/* Sign up link */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
+          <div className="mt-6 pt-6 border-t border-gray-100 text-center">
+            <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <button
-                type="button"
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                Sign up for free
-              </button>
+              <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
+                Sign up here
+              </Link>
             </p>
           </div>
         </Card>

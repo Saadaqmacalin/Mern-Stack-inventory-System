@@ -17,13 +17,13 @@ import {
 } from 'react-icons/fa';
 
 const Header = () => {
-  const { sidebarOpen, toggleSidebar, theme, setTheme, notifications, user, actions } = useAppContext();
+  const { sidebarOpen, toggleSidebar, theme, notifications, user, actions } = useAppContext();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   
   const handleThemeToggle = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    actions.setTheme(newTheme);
   };
   
   const unreadNotifications = notifications?.filter(n => !n.read) || [];

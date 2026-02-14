@@ -16,6 +16,7 @@ const AddCustomer = () => {
     name: "",
     email: "",
     phone: "",
+    password: "",
     status: "Active",
     address: {
         street: "",
@@ -62,11 +63,15 @@ const AddCustomer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let result;
+    const dataToSubmit = { ...formData };
+    if (customerToEdit && !dataToSubmit.password) {
+        delete dataToSubmit.password;
+    }
+
     if (customerToEdit) {
-        result = await actions.updateCustomer(customerToEdit._id, formData);
+        result = await actions.updateCustomer(customerToEdit._id, dataToSubmit);
     } else {
-        result = await actions.addCustomer(formData);
+        result = await actions.addCustomer(dataToSubmit);
     }
 
     if (result.success) {
@@ -118,6 +123,7 @@ const AddCustomer = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="email@example.com"
+                required
               />
               <Input
                 label="Phone"
@@ -128,6 +134,16 @@ const AddCustomer = () => {
                 required
               />
           </div>
+
+          <Input
+            label={customerToEdit ? "New Password (Leave blank to keep current)" : "Password"}
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Min 6 characters"
+            required={!customerToEdit}
+          />
 
           <Input
             label="Status"

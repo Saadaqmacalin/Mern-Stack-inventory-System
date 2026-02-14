@@ -7,6 +7,11 @@ const productSchema = new Schema(
       required: true,
       trim: true,
     },
+    sku: {
+      type: String,
+      unique: true,
+      sparse: true, // Allow nulls for existing records
+    },
 
     categoryId: {
       type: Schema.Types.ObjectId,
