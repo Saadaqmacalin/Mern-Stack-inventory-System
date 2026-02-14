@@ -1,4 +1,4 @@
-# Inventory Management System with ML Integration
+# Inventory Management System 
 
 A comprehensive MERN stack inventory management system with advanced analytics and AI-powered predictions for demand forecasting and inventory optimization.
 
