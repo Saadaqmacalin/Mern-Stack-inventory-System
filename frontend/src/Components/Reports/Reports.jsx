@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaChartBar, FaFileDownload, FaCalendar, FaFilter, FaBox, FaUsers, FaDollarSign, FaShoppingCart, FaCog } from "react-icons/fa";
+import API_BASE_URL from "../../config/api";
 
 const Reports = () => {
   const [activeReport, setActiveReport] = useState("sales");
@@ -28,22 +29,22 @@ const Reports = () => {
       let endpoint = "";
       switch (activeReport) {
         case "sales":
-          endpoint = "http://localhost:5000/api/reports/sales";
+          endpoint = `${API_BASE_URL}/reports/sales`;
           break;
         case "inventory":
-          endpoint = "http://localhost:5000/api/reports/inventory";
+          endpoint = `${API_BASE_URL}/reports/inventory`;
           break;
         case "financial":
-          endpoint = "http://localhost:5000/api/reports/financial";
+          endpoint = `${API_BASE_URL}/reports/financial`;
           break;
         case "customer":
-          endpoint = "http://localhost:5000/api/reports/customer";
+          endpoint = `${API_BASE_URL}/reports/customer`;
           break;
         case "order":
-          endpoint = "http://localhost:5000/api/reports/order";
+          endpoint = `${API_BASE_URL}/reports/order`;
           break;
         default:
-          endpoint = "http://localhost:5000/api/reports/sales";
+          endpoint = `${API_BASE_URL}/reports/sales`;
       }
 
       const response = await axios.get(endpoint, { params });
@@ -64,19 +65,19 @@ const Reports = () => {
       let endpoint = "";
       switch (activeReport) {
         case "sales":
-          endpoint = "http://localhost:5000/api/reports/sales";
+          endpoint = `${API_BASE_URL}/reports/sales`;
           break;
         case "inventory":
-          endpoint = "http://localhost:5000/api/reports/inventory";
+          endpoint = `${API_BASE_URL}/reports/inventory`;
           break;
         case "financial":
-          endpoint = "http://localhost:5000/api/reports/financial";
+          endpoint = `${API_BASE_URL}/reports/financial`;
           break;
         case "customer":
-          endpoint = "http://localhost:5000/api/reports/customer";
+          endpoint = `${API_BASE_URL}/reports/customer`;
           break;
         case "order":
-          endpoint = "http://localhost:5000/api/reports/order";
+          endpoint = `${API_BASE_URL}/reports/order`;
           break;
       }
 

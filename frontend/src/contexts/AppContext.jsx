@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect, useContext } from 'react';
+import API_BASE_URL from '../config/api';
 import axios from 'axios';
 
 // Initial state
@@ -425,8 +426,6 @@ export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [isReady, setIsReady] = React.useState(false);
   
-  // API base URL
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
   // Axios Interceptor
   useEffect(() => {

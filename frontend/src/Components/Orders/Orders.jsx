@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import { FaShoppingCart, FaBox, FaTruck, FaCheckCircle, FaTimesCircle, FaClock, FaEye, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
 const Orders = () => {
@@ -41,7 +42,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const params = filter !== "all" ? { status: filter } : {};
-      const response = await axios.get("http://localhost:5000/api/orders", { params });
+      const response = await axios.get(`${API_BASE_URL}/orders`, { params });
       setOrders(response.data.orders || []);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -52,7 +53,7 @@ const Orders = () => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/customers");
+      const response = await axios.get(`${API_BASE_URL}/customers`);
       setCustomers(response.data.customers || []);
     } catch (error) {
       console.error("Error fetching customers:", error);
@@ -61,7 +62,7 @@ const Orders = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/products");
+      const response = await axios.get(`${API_BASE_URL}/products`);
       setProducts(response.data.products || []);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -95,7 +96,7 @@ const Orders = () => {
   const handleCreateOrder = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/orders", formData);
+      await axios.post(`${API_BASE_URL}/orders`, formData);
       setShowCreateForm(false);
       setFormData({
         customerId: "",
@@ -114,7 +115,7 @@ const Orders = () => {
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/api/orders/${orderId}/status`, { status: newStatus });
+      await axios.patch(`${API_BASE_URL}/orders/${orderId}/status`, { status: newStatus });
       fetchOrders();
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -124,7 +125,7 @@ const Orders = () => {
   const handleDeleteOrder = async (orderId) => {
     if (window.confirm("Are you sure you want to delete this order?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/orders/${orderId}`);
+        await axios.delete(`${API_BASE_URL}/orders/${orderId}`);
         fetchOrders();
       } catch (error) {
         console.error("Error deleting order:", error);

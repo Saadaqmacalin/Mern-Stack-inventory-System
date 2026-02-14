@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import API_BASE_URL from '../config/api';
 import axios from 'axios';
 
 const initialState = {
@@ -77,7 +78,6 @@ const CustomerPortalContext = createContext();
 
 export const CustomerPortalProvider = ({ children }) => {
     const [state, dispatch] = useReducer(portalReducer, initialState);
-    const API_BASE = 'http://localhost:5000/api';
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(state.cart));
@@ -87,7 +87,7 @@ export const CustomerPortalProvider = ({ children }) => {
         login: async (credentials) => {
             dispatch({ type: ACTIONS.SET_LOADING, payload: true });
             try {
-                const res = await axios.post(`${API_BASE}/customer-portal/login`, credentials);
+                const res = await axios.post(`${API_BASE_URL}/customer-portal/login`, credentials);
                 localStorage.setItem('customerToken', res.data.token);
                 localStorage.setItem('customer', JSON.stringify(res.data.customer));
                 dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: res.data });
@@ -102,7 +102,7 @@ export const CustomerPortalProvider = ({ children }) => {
         register: async (data) => {
             dispatch({ type: ACTIONS.SET_LOADING, payload: true });
             try {
-                const res = await axios.post(`${API_BASE}/customer-portal/register`, data);
+                const res = await axios.post(`${API_BASE_URL}/customer-portal/register`, data);
                 localStorage.setItem('customerToken', res.data.token);
                 localStorage.setItem('customer', JSON.stringify(res.data.customer));
                 dispatch({ type: ACTIONS.LOGIN_SUCCESS, payload: res.data });
@@ -121,13 +121,13 @@ export const CustomerPortalProvider = ({ children }) => {
         },
         fetchProducts: async () => {
             try {
-                const res = await axios.get(`${API_BASE}/products`);
+                const res = await axios.get(`${API_BASE_URL}/products`);
                 dispatch({ type: ACTIONS.SET_PRODUCTS, payload: res.data.products });
             } catch (err) { console.error(err); }
         },
         fetchCategories: async () => {
             try {
-                const res = await axios.get(`${API_BASE}/categories`);
+                const res = await axios.get(`${API_BASE_URL}/categories`);
                 dispatch({ type: ACTIONS.SET_CATEGORIES, payload: res.data.categories });
             } catch (err) { console.error(err); }
         },
@@ -135,7 +135,7 @@ export const CustomerPortalProvider = ({ children }) => {
             dispatch({ type: ACTIONS.SET_LOADING, payload: true });
             const token = localStorage.getItem('customerToken');
             try {
-                const res = await axios.post(`${API_BASE}/customer-portal/orders`, orderData, {
+                const res = await axios.post(`${API_BASE_URL}/customer-portal/orders`, orderData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 dispatch({ type: ACTIONS.CLEAR_CART });
@@ -149,7 +149,7 @@ export const CustomerPortalProvider = ({ children }) => {
         fetchMyOrders: async () => {
             const token = localStorage.getItem('customerToken');
             try {
-                const res = await axios.get(`${API_BASE}/customer-portal/my-orders`, {
+                const res = await axios.get(`${API_BASE_URL}/customer-portal/my-orders`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 dispatch({ type: ACTIONS.SET_ORDERS, payload: res.data.orders });

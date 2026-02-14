@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./userContext.jsx";
+import API_BASE_URL from "../../config/api";
 
-const API_URL = "http://localhost:5000/api/users";
+const API_URL = `${API_BASE_URL}/users`;
 
 const GetUsers = () => {
   const { users, loading, error, refreshUsers } = useUserContext();

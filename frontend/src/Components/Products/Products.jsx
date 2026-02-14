@@ -3,11 +3,11 @@ import React, {
   useCallback,
   createContext,
   useContext,
-  useEffect,
   useState,
 } from "react";
+import API_BASE_URL from "../../config/api";
 
-const API_URL = "http://localhost:5000/api/products";
+const API_URL = `${API_BASE_URL}/products`;
 
 const ProductContext = createContext();
 

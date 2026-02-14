@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {useCategoryContext} from "../Categories/Categories.jsx"
 import {useProductContext} from "../Products/Products.jsx"
 import axios from "axios"
+import API_BASE_URL from "../../config/api";
 
 const Dashboard = () => {
   const {categories} = useCategoryContext()
@@ -24,7 +25,7 @@ const Dashboard = () => {
 
   const fetchDashboardAnalytics = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/analytics/inventory");
+      const response = await axios.get(`${API_BASE_URL}/analytics/inventory`);
       setAnalytics({
         totalProducts: response.data.inventoryAnalytics.totalProducts || 0,
         lowStockItems: response.data.inventoryAnalytics.lowStockItems || 0,

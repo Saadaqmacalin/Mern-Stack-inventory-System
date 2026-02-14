@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios"; // 1. Import Axios
 import { useNavigate } from "react-router";
+import API_BASE_URL from "../../config/api";
 
-const API_URL = "http://localhost:5000/api/users/resetPassword";
+const API_URL = `${API_BASE_URL}/users/resetPassword`;
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
